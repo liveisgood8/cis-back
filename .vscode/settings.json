@@ -1,0 +1,6 @@
+{
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "javascript.preferences.importModuleSpecifier": "relative",
+  "editor.tabSize": 2,
+  "files.eol": "\n"
+}
