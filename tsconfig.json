@@ -1,6 +1,11 @@
 {
     "compilerOptions": {
         "module": "commonjs",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "lib": [
+            "es6"
+        ],
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         "target": "es6",
