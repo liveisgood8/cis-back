@@ -2,9 +2,10 @@
   "name": "customerinteractionsystem",
   "version": "1.0.0",
   "description": "System for business, helps to control relations with customers and customer workflow",
-  "main": "dist/src/index.js",
+  "main": "dist/src/app.js",
   "scripts": {
     "start": "tsc && node dist/app.js",
+    "start-tspaths": "tsc && node -r ./tsconfig-paths-bootstrap.js dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,6 +26,7 @@
   "homepage": "https://github.com/liveisgood8/CustomerInteractionSystem#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "tsconfig-paths": "^3.9.0",
     "typescript": "^3.7.5"
   },
   "devDependencies": {
