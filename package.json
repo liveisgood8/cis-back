@@ -1,0 +1,37 @@
+{
+  "name": "customerinteractionsystem",
+  "version": "1.0.0",
+  "description": "System for business, helps to control relations with customers and customer workflow",
+  "main": "dist/src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liveisgood8/CustomerInteractionSystem.git"
+  },
+  "keywords": [
+    "business",
+    "customer",
+    "workflow",
+    "control"
+  ],
+  "author": "nexus",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/liveisgood8/CustomerInteractionSystem/issues"
+  },
+  "homepage": "https://github.com/liveisgood8/CustomerInteractionSystem#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "typescript": "^3.7.5"
+  },
+  "devDependencies": {
+    "@types/node": "^13.5.0",
+    "@typescript-eslint/eslint-plugin": "^2.17.0",
+    "@typescript-eslint/parser": "^2.17.0",
+    "eslint": "^6.8.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-react": "^7.18.0"
+  }
+}
