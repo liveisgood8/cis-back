@@ -2,5 +2,6 @@
   "type": "sqlite",
   "database": "./database/db.sqlite",
   "enities": "./src/models/**/*.ts",
+  "synchronize": true,
   "logging": true
 }
