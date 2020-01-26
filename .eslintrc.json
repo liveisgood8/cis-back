@@ -29,6 +29,11 @@
                 "requireParamType": false,
                 "requireReturnType": false
             }
-        ]
+        ],
+        "new-cap": "off",
+        "object-curly-spacing": [
+            "error",
+            "always"
+        ] 
     }
 }
