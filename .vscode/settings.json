@@ -1,6 +1,7 @@
 {
   "typescript.preferences.importModuleSpecifier": "relative",
   "javascript.preferences.importModuleSpecifier": "relative",
+  "typescript.preferences.quoteStyle": "single",
   "editor.tabSize": 2,
   "files.eol": "\n",
   "eslint.enable": true,
