@@ -1,5 +1,6 @@
-import express from 'express';
+import express, { Request, Response, NextFunction, ErrorRequestHandler, Errback } from 'express';
 import config from '../config';
+import { IStatus } from '../core/interfaces/status';
 
 export default () => {
   const app = express();
@@ -13,6 +14,21 @@ export default () => {
   } else {
     app.use(express.static(config.staticPath));
   }
+
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    const err: any = new Error('Указанного пути не существует');
+    err['status'] = 404;
+    next(err);
+  });
+
+  /** Main error handler */
+  app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+    const status: IStatus = {
+      error: err.message,
+    };
+    res.status(err.status || 500)
+        .json(status);
+  });
 
   app.listen(config.expressPort, () => {
     console.log('express listening on port', config.expressPort);
