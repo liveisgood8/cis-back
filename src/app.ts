@@ -3,7 +3,7 @@ import { getRepository } from 'typeorm';
 import { User } from './models/user';
 
 
-async function main() {
+async function main(): Promise<void> {
   await loaders();
 
   const userRepo = getRepository(User);

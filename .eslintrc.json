@@ -41,6 +41,10 @@
             {
                 "code": 120
             }
+        ],
+        "@typescript-eslint/interface-name-prefix": [
+            "error",
+            "always"
         ]
     }
 }
