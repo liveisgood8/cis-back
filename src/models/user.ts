@@ -9,14 +9,14 @@ export class User {
   login: string;
 
   @Column()
-  password: string;
+  password?: string;
 
   @Column({ nullable: true })
   name: string;
 
   @Column({ nullable: true })
-  surname: string;
+  surname?: string;
 
   @CreateDateColumn()
-  creationDate: Date;
+  creationDate?: Date;
 }
