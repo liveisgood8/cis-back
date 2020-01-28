@@ -1,10 +1,15 @@
 import express, { Request, Response, NextFunction } from 'express';
+import bodyParser from 'body-parser';
 import config from '../config';
 import { IStatus } from '../core/interfaces/status';
+import api from '../api';
+import passport from 'passport';
 
 export default (): void => {
   const app = express();
   const development = process.env.NODE_ENV !== 'production';
+
+  app.use(bodyParser.json());
 
   if (development) {
     console.log('application started in development mode');
@@ -14,6 +19,9 @@ export default (): void => {
   } else {
     app.use(express.static(config.staticPath));
   }
+
+  app.use(passport.initialize());
+  app.use(api());
 
   /* eslint-disable @typescript-eslint/no-unused-vars */
   /* eslint-disable @typescript-eslint/no-explicit-any */

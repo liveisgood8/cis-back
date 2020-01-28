@@ -5,5 +5,6 @@ export default {
   jwt: {
     secretKey: 'jwt_secret_key',
     audience: 'www.cis.com',
+    duration: '2d',
   },
 };
