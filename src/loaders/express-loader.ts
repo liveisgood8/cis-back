@@ -24,7 +24,7 @@ export default (): void => {
   });
 
   /** Main error handler */
-  app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  app.use((err: Record<string, any>, req: Request, res: Response, next: NextFunction) => {
     const status: IStatus = {
       error: err.message,
     };
