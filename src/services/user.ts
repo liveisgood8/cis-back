@@ -23,16 +23,33 @@ export class UserService {
         error: 'Пользователя с указанным логином не существует',
       };
     }
-    /** TODO Передавать уже захешированный пароль со стороны клиента */
-    if (this.getPasswordHash(password) !== user.password) {
+    /**
+     * TODO Передавать уже захешированный пароль со стороны клиента
+     * TODO Вернуть хеширование пароля
+     */
+    if (password !== user.password) {
       return {
-        error: 'Некорректный пароль',
+        error: 'Неверный пароль',
       };
     }
     delete user.password;
     return {
       user: user,
     };
+  }
+
+  async getById(id: number): Promise<User | undefined> {
+    const user = this.userRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
+    return user;
+  }
+
+  async getAll(): Promise<User[]> {
+    const users = this.userRepository.find();
+    return users;
   }
 
   private getPasswordHash(password: string): string {
