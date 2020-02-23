@@ -4,13 +4,13 @@
   "description": "System for business, helps to control relations with customers and customer workflow",
   "main": "dist/src/app.js",
   "scripts": {
-    "start": "tsc && node dist/app.js",
+    "start": "npx tsoa swagger && npx tsoa routes && tsc && node dist/app.js",
     "start-tspaths": "tsc && node -r ./tsconfig-paths-bootstrap.js dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/liveisgood8/CustomerInteractionSystem.git"
+    "url": "git+https://github.com/liveisgood8/cis-back.git"
   },
   "keywords": [
     "business",
@@ -21,9 +21,9 @@
   "author": "nexus",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/liveisgood8/CustomerInteractionSystem/issues"
+    "url": "https://github.com/liveisgood8/cis-back/issues"
   },
-  "homepage": "https://github.com/liveisgood8/CustomerInteractionSystem#readme",
+  "homepage": "https://github.com/liveisgood8/cis-back#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
@@ -33,6 +33,7 @@
     "passport-jwt": "^4.0.0",
     "sqlite3": "^4.1.1",
     "tsconfig-paths": "^3.9.0",
+    "tsoa": "^2.5.13",
     "typedi": "^0.8.0",
     "typeorm": "^0.2.22",
     "typescript": "^3.7.5"
