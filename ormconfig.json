@@ -1,7 +1,7 @@
 {
   "type": "sqlite",
   "database": "database/db.sqlite",
-  "entities": [ "dist/models/**/*.js" ],
+  "entities": [ "dist/src/models/**/*.js" ],
   "synchronize": true,
   "logging": true
 }

@@ -1,9 +1,12 @@
 import express, { Request, Response, NextFunction } from 'express';
 import bodyParser from 'body-parser';
-import config from '../config';
-import { IStatus } from '../core/interfaces/status';
-import api from '../api';
 import passport from 'passport';
+import swaggerUi from 'swagger-ui-express';
+import swaggerConfig from '../../swagger.json';
+import tsoaConfig from '../../tsoa.json';
+import config from '../config';
+import { RegisterRoutes } from '../api/routes';
+import { getPureError } from '../utils/error-stringify';
 
 export default (): void => {
   const app = express();
@@ -21,7 +24,8 @@ export default (): void => {
   }
 
   app.use(passport.initialize());
-  app.use(api());
+  RegisterRoutes(app);
+  app.use(tsoaConfig.swagger.basePath + '/docs', swaggerUi.serve, swaggerUi.setup(swaggerConfig));
 
   /* eslint-disable @typescript-eslint/no-unused-vars */
   /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -32,12 +36,9 @@ export default (): void => {
   });
 
   /** Main error handler */
-  app.use((err: Record<string, any>, req: Request, res: Response, next: NextFunction) => {
-    const status: IStatus = {
-      error: err.message,
-    };
-    res.status(err.status || 500)
-        .json(status);
+  app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+    res.status(500);
+    res.json(getPureError(err));
   });
 
   /* eslint-enable @typescript-eslint/no-unused-vars */

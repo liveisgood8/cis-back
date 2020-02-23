@@ -2,6 +2,9 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeor
 
 @Entity()
 export class User {
+  /**
+   * @isInt User id should be an integer
+   */
   @PrimaryGeneratedColumn()
   id: number;
 

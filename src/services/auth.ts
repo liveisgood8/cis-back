@@ -1,17 +1,18 @@
 import { Service } from 'typedi';
 import { User } from '../models/user';
-import { ISignInStatus } from '../core/interfaces/signin-status';
 import { Repository } from 'typeorm';
 import { createHash } from 'crypto';
 import config from '../config';
+import { ILoginResult } from '../core/types';
+import { sign } from 'jsonwebtoken';
 
 @Service()
-export class UserService {
+export class AuthService {
   constructor(
     private userRepository: Repository<User>,
   ) {}
 
-  async signIn(login: string, password: string): Promise<ISignInStatus> {
+  public async login(login: string, password: string): Promise<ILoginResult> {
     const user = await this.userRepository.createQueryBuilder('user')
         .select(['user.id', 'user.login', 'user.password', 'user.name'])
         .where('user.login = :login', {
@@ -19,37 +20,30 @@ export class UserService {
         })
         .getOne();
     if (!user) {
-      return {
-        error: 'Пользователя с указанным логином не существует',
-      };
+      throw new Error('Пользователя с указанным логином не существует');
     }
     /**
      * TODO Передавать уже захешированный пароль со стороны клиента
      * TODO Вернуть хеширование пароля
      */
     if (password !== user.password) {
-      return {
-        error: 'Неверный пароль',
-      };
+      throw new Error('Неверный пароль');
     }
     delete user.password;
-    return {
+
+    const jwtPayload = {
       user: user,
     };
-  }
-
-  async getById(id: number): Promise<User | undefined> {
-    const user = this.userRepository.findOne({
-      where: {
-        id: id,
-      },
+    const accessToken = sign(jwtPayload, config.jwt.secretKey, {
+      audience: config.jwt.audience,
+      expiresIn: config.jwt.duration,
     });
-    return user;
-  }
 
-  async getAll(): Promise<User[]> {
-    const users = this.userRepository.find();
-    return users;
+    return {
+      user,
+      accessToken,
+      refreshToken: 'todo',
+    };
   }
 
   private getPasswordHash(password: string): string {

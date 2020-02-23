@@ -14,7 +14,8 @@
         "sourceMap": true,
         "outDir": "dist",
         "incremental": true,
-        "baseUrl": "."
+        "baseUrl": ".",
+        "resolveJsonModule": true
     },
     "exclude": [
         "node_modules"
