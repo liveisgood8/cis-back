@@ -34,9 +34,9 @@ export class AuthService {
     const jwtPayload = {
       user: user,
     };
-    const accessToken = sign(jwtPayload, config.jwt.secretKey, {
+    const accessToken = sign(jwtPayload, config.jwt.access.secretKey, {
       audience: config.jwt.audience,
-      expiresIn: config.jwt.duration,
+      expiresIn: config.jwt.access.duration,
     });
 
     return {

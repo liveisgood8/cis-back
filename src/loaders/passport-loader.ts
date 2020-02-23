@@ -8,7 +8,7 @@ import { UsersService } from '../services/users';
 export default (): void => {
   passport.use(new JwtStrategy({
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: config.jwt.secretKey,
+    secretOrKey: config.jwt.access.secretKey,
     audience: config.jwt.audience,
   }, async (payload: any, done: (error: Error, user?: any, options?: any) => void) => {
     const payloadUser: User = payload.user;
@@ -21,7 +21,7 @@ export default (): void => {
       delete user.password;
       return done(null, user);
     } else {
-      const err = new Error('Невалидный токен');
+      const err = new Error('Невалидный access токен');
       return done(err, null);
     }
   }));

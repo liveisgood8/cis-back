@@ -17,7 +17,7 @@ export function expressAuthentication(request: Request,
         reject(new Error('Для доступа к ресурсу необходимо авторизоваться'));
       }
 
-      jwt.verify(accessToken, config.jwt.secretKey, (err: any, decoded: any) => {
+      jwt.verify(accessToken, config.jwt.access.secretKey, (err: any, decoded: any) => {
         if (err) {
           reject(err);
         } else {

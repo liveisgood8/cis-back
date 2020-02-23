@@ -1,10 +1,12 @@
-export default {
-  expressPort: 8080,
-  staticPath: './public',
-  passwordSalt: 'password_salt',
-  jwt: {
-    secretKey: 'jwt_secret_key',
-    audience: 'www.cis.com',
-    duration: '2d',
-  },
-};
+import { config as devConfig } from './dev';
+import { config as prodConfig } from './dev';
+import { IConfig } from './types';
+
+let config: IConfig;
+if (process.env.NODE_ENV !== 'production') {
+  config = devConfig;
+} else {
+  config = prodConfig;
+}
+
+export default config;
