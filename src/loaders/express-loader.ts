@@ -2,11 +2,13 @@ import express, { Request, Response, NextFunction } from 'express';
 import bodyParser from 'body-parser';
 import passport from 'passport';
 import swaggerUi from 'swagger-ui-express';
+import cors from 'cors';
 import swaggerConfig from '../../swagger.json';
 import tsoaConfig from '../../tsoa.json';
 import config from '../config';
 import { RegisterRoutes } from '../api/routes';
 import { getPureError } from '../utils/error-stringify';
+import { ValidateError, FieldErrors } from 'tsoa';
 
 export default (): void => {
   const app = express();
@@ -16,6 +18,7 @@ export default (): void => {
 
   if (development) {
     console.log('application started in development mode');
+    app.use(cors());
     app.get('/', (req: Request, res: Response) => {
       res.redirect('http://localhost:3000');
     });
@@ -37,8 +40,16 @@ export default (): void => {
 
   /** Main error handler */
   app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-    res.status(500);
-    res.json(getPureError(err));
+    let message = 'Неизвестная ошибка';
+    if (err instanceof ValidateError) {
+      message = Object.values(err.fields).map((e) => `${e.message}, but got ${e.value}`).join('\n');
+    } else {
+      message = err.message;
+    }
+    res.status(err.status || 500);
+    res.json({
+      error: message,
+    });
   });
 
   /* eslint-enable @typescript-eslint/no-unused-vars */

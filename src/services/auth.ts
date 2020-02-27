@@ -5,6 +5,7 @@ import { createHash } from 'crypto';
 import config from '../config';
 import { ILoginResult } from '../core/types';
 import { sign } from 'jsonwebtoken';
+import { StatusError } from '../utils/error-with-status';
 
 @Service()
 export class AuthService {
@@ -20,14 +21,14 @@ export class AuthService {
         })
         .getOne();
     if (!user) {
-      throw new Error('Пользователя с указанным логином не существует');
+      throw new StatusError(400, 'Пользователя с указанным логином не существует');
     }
     /**
      * TODO Передавать уже захешированный пароль со стороны клиента
      * TODO Вернуть хеширование пароля
      */
     if (password !== user.password) {
-      throw new Error('Неверный пароль');
+      throw new StatusError(400, 'Неверный пароль');
     }
     delete user.password;
 

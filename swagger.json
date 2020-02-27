@@ -59,6 +59,94 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"Client": {
+				"properties": {
+					"id": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"name": {
+						"type": "string"
+					},
+					"creationDate": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"contracts": {
+						"items": {
+							"$ref": "#/components/schemas/Contract"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"contracts"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Contract": {
+				"properties": {
+					"id": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"client": {
+						"$ref": "#/components/schemas/Client"
+					},
+					"name": {
+						"type": "string"
+					},
+					"tasks": {
+						"items": {
+							"$ref": "#/components/schemas/Task"
+						},
+						"type": "array"
+					},
+					"creationDate": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					}
+				},
+				"required": [
+					"id",
+					"client",
+					"name",
+					"tasks"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Task": {
+				"properties": {
+					"id": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"contract": {
+						"$ref": "#/components/schemas/Contract"
+					},
+					"name": {
+						"type": "string"
+					},
+					"creationDate": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					}
+				},
+				"required": [
+					"id",
+					"contract",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {
@@ -108,6 +196,165 @@
 				},
 				"security": [],
 				"parameters": []
+			}
+		},
+		"/clients/all": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Client"
+									},
+									"type": "array"
+								}
+							}
+						},
+						"description": "Ok"
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/clients/id/{id}": {
+			"get": {
+				"operationId": "GetById",
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Client"
+								}
+							}
+						},
+						"description": "Ok"
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer"
+						}
+					}
+				]
+			}
+		},
+		"/contracts/all": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Contract"
+									},
+									"type": "array"
+								}
+							}
+						},
+						"description": "Ok"
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/contracts/byClientId/{id}": {
+			"get": {
+				"operationId": "GetByClientId",
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Contract"
+									},
+									"type": "array"
+								}
+							}
+						},
+						"description": "Ok"
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer"
+						}
+					}
+				]
+			}
+		},
+		"/tasks/all": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Task"
+									},
+									"type": "array"
+								}
+							}
+						},
+						"description": "Ok"
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/tasks/byContractId/{id}": {
+			"get": {
+				"operationId": "GetByContractId",
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Task"
+									},
+									"type": "array"
+								}
+							}
+						},
+						"description": "Ok"
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer"
+						}
+					}
+				]
 			}
 		},
 		"/users/all": {
