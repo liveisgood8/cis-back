@@ -1,7 +1,9 @@
 import { User } from '../models/user';
+import { Errors } from '../utils/errors';
 
 export interface IError {
-  error: Error;
+  code: Errors;
+  message?: string;
 }
 
 export interface ILoginResult {

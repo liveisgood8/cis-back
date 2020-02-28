@@ -1,7 +1,10 @@
 import { Service } from 'typedi';
-import { Repository } from 'typeorm';
+import { Repository, QueryFailedError } from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { Contract } from '../models/contract';
 import { Client } from '../models/client';
+import { IError } from '../core/types';
+import { Errors } from '../utils/errors';
 
 @Service()
 export class ContractsService {
@@ -22,5 +25,17 @@ export class ContractsService {
         client: client,
       },
     });
+  }
+
+  public async insert(contract: QueryDeepPartialEntity<Contract>): Promise<void | IError> {
+    try {
+      await this.contractsRepository.insert(contract);
+    } catch (err) {
+      console.error(err);
+      return {
+        code: Errors.INSERT_ENTITY_ERROR,
+        message: err.message,
+      };
+    }
   }
 }

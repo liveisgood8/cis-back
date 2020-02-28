@@ -147,6 +147,35 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"IError": {
+				"properties": {
+					"error": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"error"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IContractCreateRequestBody": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"clientId": {
+						"type": "integer",
+						"format": "int32"
+					}
+				},
+				"required": [
+					"name",
+					"clientId"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {
@@ -251,28 +280,6 @@
 		},
 		"/contracts/all": {
 			"get": {
-				"operationId": "GetAll",
-				"responses": {
-					"200": {
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/Contract"
-									},
-									"type": "array"
-								}
-							}
-						},
-						"description": "Ok"
-					}
-				},
-				"security": [],
-				"parameters": []
-			}
-		},
-		"/contracts/byClientId/{id}": {
-			"get": {
 				"operationId": "GetByClientId",
 				"responses": {
 					"200": {
@@ -292,15 +299,48 @@
 				"security": [],
 				"parameters": [
 					{
-						"in": "path",
-						"name": "id",
-						"required": true,
+						"in": "query",
+						"name": "clientId",
+						"required": false,
 						"schema": {
 							"format": "int32",
 							"type": "integer"
 						}
 					}
 				]
+			}
+		},
+		"/contracts/insert": {
+			"post": {
+				"operationId": "InsertContract",
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"oneOf": [
+										{},
+										{
+											"$ref": "#/components/schemas/IError"
+										}
+									]
+								}
+							}
+						},
+						"description": "Ok"
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IContractCreateRequestBody"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/tasks/all": {
@@ -322,33 +362,11 @@
 					}
 				},
 				"security": [],
-				"parameters": []
-			}
-		},
-		"/tasks/byContractId/{id}": {
-			"get": {
-				"operationId": "GetByContractId",
-				"responses": {
-					"200": {
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/Task"
-									},
-									"type": "array"
-								}
-							}
-						},
-						"description": "Ok"
-					}
-				},
-				"security": [],
 				"parameters": [
 					{
-						"in": "path",
-						"name": "id",
-						"required": true,
+						"in": "query",
+						"name": "contractId",
+						"required": false,
 						"schema": {
 							"format": "int32",
 							"type": "integer"

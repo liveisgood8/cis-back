@@ -1,4 +1,4 @@
-import { Controller, Route, Get } from 'tsoa';
+import { Controller, Route, Get, Query } from 'tsoa';
 import { Task } from '../../models/task';
 import Container from 'typedi';
 import { TasksService } from '../../services/tasks';
@@ -12,16 +12,13 @@ export class TasksController extends Controller {
     this.service = Container.get(TasksService);
   }
 
-  @Get('/all')
-  public async getAll(): Promise<Task[]> {
-    return this.service.getAll();
-  }
-
   /**
-   * @isInt id Contract id must be an integer
+   * @isInt contractId Contract id must be an integer
    */
-  @Get('/byContractId/{id}')
-  public async getByContractId(id: number): Promise<Task[]> {
-    return this.service.getByContractId(id);
+  @Get('/all')
+  public async getAll(@Query('contractId') contractId?: number): Promise<Task[]> {
+    return contractId ?
+      this.service.getByContractId(contractId) :
+      this.service.getAll();
   }
 }

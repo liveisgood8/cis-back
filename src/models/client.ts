@@ -19,3 +19,8 @@ export class Client {
   @OneToMany((type) => Contract, (contract) => contract.client)
   contracts: Contract[];
 }
+
+export interface IClientCreateRequestBody {
+  name: string;
+  contracts?: number[];
+}

@@ -1,11 +1,13 @@
 import { Service } from 'typedi';
-import { User } from '../models/user';
 import { Repository } from 'typeorm';
+import { sign } from 'jsonwebtoken';
 import { createHash } from 'crypto';
+import * as HttpStatus from 'http-status-codes';
+import { User } from '../models/user';
 import config from '../config';
 import { ILoginResult } from '../core/types';
-import { sign } from 'jsonwebtoken';
-import { StatusError } from '../utils/error-with-status';
+import { CodeError } from '../utils/error-with-code';
+import { Errors } from '../utils/errors';
 
 @Service()
 export class AuthService {
@@ -21,14 +23,16 @@ export class AuthService {
         })
         .getOne();
     if (!user) {
-      throw new StatusError(400, 'Пользователя с указанным логином не существует');
+      throw new CodeError(Errors.AUTH_USER_NOT_FOUND,
+          HttpStatus.NOT_ACCEPTABLE);
     }
     /**
      * TODO Передавать уже захешированный пароль со стороны клиента
      * TODO Вернуть хеширование пароля
      */
     if (password !== user.password) {
-      throw new StatusError(400, 'Неверный пароль');
+      throw new CodeError(Errors.AUTH_WRONG_PASSWORD,
+          HttpStatus.NOT_ACCEPTABLE);
     }
     delete user.password;
 

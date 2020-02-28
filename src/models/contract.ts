@@ -22,3 +22,12 @@ export class Contract {
   @CreateDateColumn()
   creationDate?: Date;
 }
+
+export interface IContractCreateRequestBody {
+  name: string;
+
+  /**
+   * @isInt clientId must be an integer
+   */
+  clientId: number;
+}

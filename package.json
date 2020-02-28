@@ -5,7 +5,8 @@
   "main": "dist/src/app.js",
   "scripts": {
     "start": "tsc && node dist/src/app.js",
-    "start:tsoa": "npx tsoa swagger && npx tsoa routes && tsc && node dist/src/app.js",
+    "start:tsoa": "npx tsoa routes && tsc && node dist/src/app.js",
+    "make-swagger": "npx tsoa swagger",
     "start:production": "set NODE_ENV=production&&node dist/src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -30,6 +31,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-validator": "^6.3.1",
+    "http-status-codes": "^1.4.0",
     "jsonwebtoken": "^8.5.1",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
