@@ -15,6 +15,13 @@ export class Task {
   @Column({ length: 255 })
   name: string;
 
+  @Column({ length: 255 })
+  description: string;
+
+  /** Выполнить задачу ДО */
+  @Column()
+  doneTo: Date;
+
   @CreateDateColumn()
   creationDate?: Date;
 }

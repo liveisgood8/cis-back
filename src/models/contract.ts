@@ -16,18 +16,22 @@ export class Contract {
   @Column({ length: 255 })
   name: string;
 
+  /** Дата заключения договора */
+  @Column()
+  conclusionDate: Date;
+
+  @Column({ length: 255 })
+  scanPath: string;
+
+  /**
+   * @maxLength 128
+   */
+  @Column({ length: 128, nullable: true })
+  comment?: string;
+
   @OneToMany((type) => Task, (task) => task.contract)
   tasks: Task[];
 
   @CreateDateColumn()
   creationDate?: Date;
-}
-
-export interface IContractCreateRequestBody {
-  name: string;
-
-  /**
-   * @isInt clientId must be an integer
-   */
-  clientId: number;
 }

@@ -24,8 +24,9 @@ const models: TsoaRoute.Models = {
             "id": { "dataType": "integer", "required": true, "validators": { "isInt": { "errorMsg": "User id should be an integer" } } },
             "login": { "dataType": "string", "required": true },
             "password": { "dataType": "string" },
-            "name": { "dataType": "string", "required": true },
+            "name": { "dataType": "string" },
             "surname": { "dataType": "string" },
+            "imageId": { "dataType": "double", "required": true },
             "creationDate": { "dataType": "datetime" },
         },
         "additionalProperties": false,
@@ -37,40 +38,6 @@ const models: TsoaRoute.Models = {
             "user": { "ref": "User", "required": true },
             "accessToken": { "dataType": "string", "required": true },
             "refreshToken": { "dataType": "string", "required": true },
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Client": {
-        "dataType": "refObject",
-        "properties": {
-            "id": { "dataType": "integer", "required": true, "validators": { "isInt": { "errorMsg": "Client id should be an integer" } } },
-            "name": { "dataType": "string", "required": true },
-            "creationDate": { "dataType": "datetime" },
-            "contracts": { "dataType": "array", "array": { "ref": "Contract" }, "required": true },
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Contract": {
-        "dataType": "refObject",
-        "properties": {
-            "id": { "dataType": "integer", "required": true, "validators": { "isInt": { "errorMsg": "Contract id should be an integer" } } },
-            "client": { "ref": "Client", "required": true },
-            "name": { "dataType": "string", "required": true },
-            "tasks": { "dataType": "array", "array": { "ref": "Task" }, "required": true },
-            "creationDate": { "dataType": "datetime" },
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Task": {
-        "dataType": "refObject",
-        "properties": {
-            "id": { "dataType": "integer", "required": true, "validators": { "isInt": { "errorMsg": "Task id should be an integer" } } },
-            "contract": { "ref": "Contract", "required": true },
-            "name": { "dataType": "string", "required": true },
-            "creationDate": { "dataType": "datetime" },
         },
         "additionalProperties": false,
     },
@@ -89,11 +56,84 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "IContractCreateRequestBody": {
+    "ILoginRequestBody": {
+        "dataType": "refObject",
+        "properties": {
+            "login": { "dataType": "string", "required": true },
+            "password": { "dataType": "string", "required": true },
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IRegisterRequestBody": {
+        "dataType": "refObject",
+        "properties": {
+            "login": { "dataType": "string", "required": true },
+            "password": { "dataType": "string", "required": true },
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Client": {
+        "dataType": "refObject",
+        "properties": {
+            "id": { "dataType": "integer", "required": true, "validators": { "isInt": { "errorMsg": "Client id should be an integer" } } },
+            "name": { "dataType": "string", "required": true },
+            "email": { "dataType": "string", "required": true, "validators": { "maxLength": { "value": 128 } } },
+            "address": { "dataType": "string", "required": true },
+            "comment": { "dataType": "string", "validators": { "maxLength": { "value": 128 } } },
+            "creationDate": { "dataType": "datetime" },
+            "contracts": { "dataType": "array", "array": { "ref": "Contract" }, "required": true },
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Contract": {
+        "dataType": "refObject",
+        "properties": {
+            "id": { "dataType": "integer", "required": true, "validators": { "isInt": { "errorMsg": "Contract id should be an integer" } } },
+            "client": { "ref": "Client", "required": true },
+            "name": { "dataType": "string", "required": true },
+            "conclusionDate": { "dataType": "datetime", "required": true },
+            "scanPath": { "dataType": "string", "required": true },
+            "comment": { "dataType": "string", "validators": { "maxLength": { "value": 128 } } },
+            "tasks": { "dataType": "array", "array": { "ref": "Task" }, "required": true },
+            "creationDate": { "dataType": "datetime" },
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Task": {
+        "dataType": "refObject",
+        "properties": {
+            "id": { "dataType": "integer", "required": true, "validators": { "isInt": { "errorMsg": "Task id should be an integer" } } },
+            "contract": { "ref": "Contract", "required": true },
+            "name": { "dataType": "string", "required": true },
+            "description": { "dataType": "string", "required": true },
+            "doneTo": { "dataType": "datetime", "required": true },
+            "creationDate": { "dataType": "datetime" },
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IClientCreateRequestBody": {
         "dataType": "refObject",
         "properties": {
             "name": { "dataType": "string", "required": true },
+            "email": { "dataType": "string", "required": true, "validators": { "maxLength": { "value": 128 } } },
+            "address": { "dataType": "string", "required": true },
+            "comment": { "dataType": "string", "required": true },
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IContractCreateRequestBody": {
+        "dataType": "refObject",
+        "properties": {
             "clientId": { "dataType": "integer", "required": true, "validators": { "isInt": { "errorMsg": "clientId must be an integer" } } },
+            "name": { "dataType": "string", "required": true },
+            "conclusionDate": { "dataType": "datetime", "required": true },
+            "comment": { "dataType": "string" },
         },
         "additionalProperties": false,
     },
@@ -111,8 +151,7 @@ export function RegisterRoutes(app: express.Express) {
     app.post('/api/v1/auth/login',
         function(request: any, response: any, next: any) {
             const args = {
-                login: { "in": "body-prop", "name": "login", "required": true, "dataType": "string" },
-                password: { "in": "body-prop", "name": "password", "required": true, "dataType": "string" },
+                requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ILoginRequestBody" },
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -131,9 +170,53 @@ export function RegisterRoutes(app: express.Express) {
             promiseHandler(controller, promise, response, next);
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    app.get('/api/v1/clients/all',
+    app.post('/api/v1/auth/logout',
         function(request: any, response: any, next: any) {
             const args = {
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new AuthController();
+
+
+            const promise = controller.logout.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    app.post('/api/v1/auth/register',
+        function(request: any, response: any, next: any) {
+            const args = {
+                requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "IRegisterRequestBody" },
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new AuthController();
+
+
+            const promise = controller.register.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    app.get('/api/v1/clients',
+        function(request: any, response: any, next: any) {
+            const args = {
+                id: { "in": "query", "name": "id", "dataType": "integer", "validators": { "isInt": { "errorMsg": "Id must be an integer" } } },
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -148,14 +231,14 @@ export function RegisterRoutes(app: express.Express) {
             const controller = new ClientsController();
 
 
-            const promise = controller.getAll.apply(controller, validatedArgs as any);
+            const promise = controller.getByIdOrAll.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    app.get('/api/v1/clients/id/:id',
+    app.post('/api/v1/clients',
         function(request: any, response: any, next: any) {
             const args = {
-                id: { "in": "path", "name": "id", "required": true, "dataType": "integer", "validators": { "isInt": { "errorMsg": "Id of client must be an integer" } } },
+                requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "IClientCreateRequestBody" },
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -170,14 +253,14 @@ export function RegisterRoutes(app: express.Express) {
             const controller = new ClientsController();
 
 
-            const promise = controller.getById.apply(controller, validatedArgs as any);
+            const promise = controller.insert.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    app.get('/api/v1/contracts/all',
+    app.get('/api/v1/contracts',
         function(request: any, response: any, next: any) {
             const args = {
-                clientId: { "in": "query", "name": "clientId", "dataType": "integer", "validators": { "isInt": { "errorMsg": "Contract id must be an integer" } } },
+                clientId: { "in": "query", "name": "clientId", "dataType": "integer", "validators": { "isInt": { "errorMsg": "Client id must be an integer" } } },
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -192,11 +275,11 @@ export function RegisterRoutes(app: express.Express) {
             const controller = new ContractsController();
 
 
-            const promise = controller.getByClientId.apply(controller, validatedArgs as any);
+            const promise = controller.getByClientIdOrAll.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    app.post('/api/v1/contracts/insert',
+    app.post('/api/v1/contracts',
         function(request: any, response: any, next: any) {
             const args = {
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "IContractCreateRequestBody" },
@@ -218,7 +301,7 @@ export function RegisterRoutes(app: express.Express) {
             promiseHandler(controller, promise, response, next);
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    app.get('/api/v1/tasks/all',
+    app.get('/api/v1/tasks',
         function(request: any, response: any, next: any) {
             const args = {
                 contractId: { "in": "query", "name": "contractId", "dataType": "integer", "validators": { "isInt": { "errorMsg": "Contract id must be an integer" } } },
@@ -240,7 +323,7 @@ export function RegisterRoutes(app: express.Express) {
             promiseHandler(controller, promise, response, next);
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    app.get('/api/v1/users/all',
+    app.get('/api/v1/users',
         function(request: any, response: any, next: any) {
             const args = {
             };
@@ -307,15 +390,15 @@ export function RegisterRoutes(app: express.Express) {
                 case 'request':
                     return request;
                 case 'query':
-                    return validationService.ValidateParam(args[key], request.query[name], name, fieldErrors, undefined, { "noImplicitAdditionalProperties": "silently-remove-extras", "controllerPathGlobs": ["./src/api/controllers/*.ts"], "specVersion": 3 });
+                    return validationService.ValidateParam(args[key], request.query[name], name, fieldErrors, undefined, { "noImplicitAdditionalProperties": "silently-remove-extras", "controllerPathGlobs": ["./src/api/controllers/*.ts"], "specVersion": 2 });
                 case 'path':
-                    return validationService.ValidateParam(args[key], request.params[name], name, fieldErrors, undefined, { "noImplicitAdditionalProperties": "silently-remove-extras", "controllerPathGlobs": ["./src/api/controllers/*.ts"], "specVersion": 3 });
+                    return validationService.ValidateParam(args[key], request.params[name], name, fieldErrors, undefined, { "noImplicitAdditionalProperties": "silently-remove-extras", "controllerPathGlobs": ["./src/api/controllers/*.ts"], "specVersion": 2 });
                 case 'header':
-                    return validationService.ValidateParam(args[key], request.header(name), name, fieldErrors, undefined, { "noImplicitAdditionalProperties": "silently-remove-extras", "controllerPathGlobs": ["./src/api/controllers/*.ts"], "specVersion": 3 });
+                    return validationService.ValidateParam(args[key], request.header(name), name, fieldErrors, undefined, { "noImplicitAdditionalProperties": "silently-remove-extras", "controllerPathGlobs": ["./src/api/controllers/*.ts"], "specVersion": 2 });
                 case 'body':
-                    return validationService.ValidateParam(args[key], request.body, name, fieldErrors, name + '.', { "noImplicitAdditionalProperties": "silently-remove-extras", "controllerPathGlobs": ["./src/api/controllers/*.ts"], "specVersion": 3 });
+                    return validationService.ValidateParam(args[key], request.body, name, fieldErrors, name + '.', { "noImplicitAdditionalProperties": "silently-remove-extras", "controllerPathGlobs": ["./src/api/controllers/*.ts"], "specVersion": 2 });
                 case 'body-prop':
-                    return validationService.ValidateParam(args[key], request.body[name], name, fieldErrors, 'body.', { "noImplicitAdditionalProperties": "silently-remove-extras", "controllerPathGlobs": ["./src/api/controllers/*.ts"], "specVersion": 3 });
+                    return validationService.ValidateParam(args[key], request.body[name], name, fieldErrors, 'body.', { "noImplicitAdditionalProperties": "silently-remove-extras", "controllerPathGlobs": ["./src/api/controllers/*.ts"], "specVersion": 2 });
             }
         });
 

@@ -2,6 +2,7 @@ import { Service } from 'typedi';
 import { Repository } from 'typeorm';
 import { Task } from '../models/task';
 import { Contract } from '../models/contract';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 @Service()
 export class TasksService {
@@ -22,5 +23,10 @@ export class TasksService {
         contract: contract,
       },
     });
+  }
+
+  public async insert(client: QueryDeepPartialEntity<Task>): Promise<number> {
+    const result = await this.tasksRepository.insert(client);
+    return result.identifiers[0].id;
   }
 }

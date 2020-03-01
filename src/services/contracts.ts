@@ -27,15 +27,8 @@ export class ContractsService {
     });
   }
 
-  public async insert(contract: QueryDeepPartialEntity<Contract>): Promise<void | IError> {
-    try {
-      await this.contractsRepository.insert(contract);
-    } catch (err) {
-      console.error(err);
-      return {
-        code: Errors.INSERT_ENTITY_ERROR,
-        message: err.message,
-      };
-    }
+  public async insert(contract: QueryDeepPartialEntity<Contract>): Promise<number> {
+    const result = await this.contractsRepository.insert(contract);
+    return result.identifiers[0].id;
   }
 }

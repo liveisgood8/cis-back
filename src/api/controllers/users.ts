@@ -1,11 +1,12 @@
-import { Route, Get, Controller } from 'tsoa';
-import { User } from '../../models/user';
+import { Route, Get, Controller, Tags } from 'tsoa';
 import Container from 'typedi';
+import { User } from '../../models/user';
 import { UsersService } from '../../services/users';
 
+@Tags('Users')
 @Route('/users')
 export class UsersController extends Controller {
-  @Get('/all')
+  @Get()
   public async getAll(): Promise<User[]> {
     const userService = Container.get(UsersService);
     return userService.getAll();
