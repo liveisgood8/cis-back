@@ -1,4 +1,4 @@
-import { Controller, Route, Get, Query, Tags, Body, Security, Response } from 'tsoa';
+import { Controller, Route, Get, Query, Tags, Body, Security, Response, Post } from 'tsoa';
 import { Task } from '../../models/task';
 import Container from 'typedi';
 import { TasksService } from '../../services/tasks';
@@ -39,10 +39,12 @@ export class TasksController extends Controller {
 
   @Response<number>('201', 'Задача успешно добавлен')
   @Response<IError>('406', 'Ошибка добавление новой задачи в базу')
+  @Post()
   public async insert(
     @Body() requestBody: ITaskCreateRequestBody,
   ): Promise<number | IError> {
     try {
+      this.setStatus(201);
       return this.service.insert({
         contract: {
           id: requestBody.contractId,

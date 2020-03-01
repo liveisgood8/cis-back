@@ -14,7 +14,7 @@ interface IClientCreateRequestBody {
    */
   email: string;
   address: string;
-  comment: string;
+  comment?: string;
 }
 
 @Tags('Clients')

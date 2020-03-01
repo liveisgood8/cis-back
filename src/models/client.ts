@@ -24,7 +24,7 @@ export class Client {
   /**
    * @maxLength 128
    */
-  @Column({ length: 128 })
+  @Column({ length: 128, nullable: true })
   comment?: string;
 
   @CreateDateColumn()

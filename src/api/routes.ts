@@ -122,7 +122,7 @@ const models: TsoaRoute.Models = {
             "name": { "dataType": "string", "required": true },
             "email": { "dataType": "string", "required": true, "validators": { "maxLength": { "value": 128 } } },
             "address": { "dataType": "string", "required": true },
-            "comment": { "dataType": "string", "required": true },
+            "comment": { "dataType": "string" },
         },
         "additionalProperties": false,
     },
@@ -134,6 +134,17 @@ const models: TsoaRoute.Models = {
             "name": { "dataType": "string", "required": true },
             "conclusionDate": { "dataType": "datetime", "required": true },
             "comment": { "dataType": "string" },
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ITaskCreateRequestBody": {
+        "dataType": "refObject",
+        "properties": {
+            "contractId": { "dataType": "integer", "required": true, "validators": { "isInt": { "errorMsg": "contractId Contract id must be an integer" } } },
+            "name": { "dataType": "string", "required": true },
+            "description": { "dataType": "string", "required": true },
+            "doneTo": { "dataType": "datetime", "required": true },
         },
         "additionalProperties": false,
     },
@@ -320,6 +331,28 @@ export function RegisterRoutes(app: express.Express) {
 
 
             const promise = controller.getAll.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    app.post('/api/v1/tasks',
+        function(request: any, response: any, next: any) {
+            const args = {
+                requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ITaskCreateRequestBody" },
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new TasksController();
+
+
+            const promise = controller.insert.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
