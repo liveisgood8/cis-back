@@ -18,7 +18,7 @@ interface IClientCreateRequestBody {
 }
 
 @Tags('Clients')
-// @Security('JWT')
+@Security('JWT')
 @Route('/clients')
 export class ClientsController extends Controller {
   private service: ClientsService;

@@ -17,7 +17,7 @@ interface ITaskCreateRequestBody {
 }
 
 @Tags('Tasks')
-// @Security('JWT')
+@Security('JWT')
 @Route('/tasks')
 export class TasksController extends Controller {
   private service: TasksService;

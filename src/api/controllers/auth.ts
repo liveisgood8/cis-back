@@ -11,6 +11,9 @@ interface ILoginRequestBody {
 interface IRegisterRequestBody {
   login: string;
   password: string;
+  name: string;
+  surname: string;
+  imageId: number;
 }
 
 @Tags('Auth')

@@ -19,7 +19,7 @@ interface IContractCreateRequestBody {
 }
 
 @Tags('Contracts')
-// @Security('JWT')
+@Security('JWT')
 @Route('/contracts')
 export class ContractsController extends Controller {
   private service: ContractsService;

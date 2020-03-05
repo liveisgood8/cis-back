@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from 'typeorm';
+import { BusinessRequest } from './request';
 
 @Entity()
 export class User {
@@ -22,6 +23,9 @@ export class User {
 
   @Column()
   imageId: number;
+
+  @OneToMany((type) => BusinessRequest, (businessRequest) => businessRequest.user)
+  requests: BusinessRequest[];
 
   @CreateDateColumn()
   creationDate?: Date;

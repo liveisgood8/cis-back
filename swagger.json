@@ -18,11 +18,22 @@
 					"x-nullable": true
 				},
 				"name": {
-					"type": "string"
+					"type": "string",
+					"x-nullable": true
 				},
 				"surname": {
 					"type": "string",
 					"x-nullable": true
+				},
+				"imageId": {
+					"type": "number",
+					"format": "double"
+				},
+				"requests": {
+					"items": {
+						"$ref": "#/definitions/BusinessRequest"
+					},
+					"type": "array"
 				},
 				"creationDate": {
 					"type": "string",
@@ -33,7 +44,176 @@
 			"required": [
 				"id",
 				"login",
-				"name"
+				"imageId",
+				"requests"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"Contract": {
+			"properties": {
+				"id": {
+					"type": "integer",
+					"format": "int32"
+				},
+				"client": {
+					"$ref": "#/definitions/Client"
+				},
+				"name": {
+					"type": "string"
+				},
+				"conclusionDate": {
+					"type": "string",
+					"format": "date-time",
+					"description": "Дата заключения договора"
+				},
+				"scanPath": {
+					"type": "string"
+				},
+				"comment": {
+					"type": "string",
+					"maxLength": 128,
+					"x-nullable": true
+				},
+				"tasks": {
+					"items": {
+						"$ref": "#/definitions/Task"
+					},
+					"type": "array"
+				},
+				"requests": {
+					"items": {
+						"$ref": "#/definitions/BusinessRequest"
+					},
+					"type": "array"
+				},
+				"creationDate": {
+					"type": "string",
+					"format": "date-time",
+					"x-nullable": true
+				}
+			},
+			"required": [
+				"id",
+				"client",
+				"name",
+				"conclusionDate",
+				"scanPath",
+				"tasks",
+				"requests"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"Client": {
+			"properties": {
+				"id": {
+					"type": "integer",
+					"format": "int32"
+				},
+				"name": {
+					"type": "string"
+				},
+				"email": {
+					"type": "string",
+					"maxLength": 128
+				},
+				"address": {
+					"type": "string"
+				},
+				"comment": {
+					"type": "string",
+					"maxLength": 128,
+					"x-nullable": true
+				},
+				"creationDate": {
+					"type": "string",
+					"format": "date-time",
+					"x-nullable": true
+				},
+				"contracts": {
+					"items": {
+						"$ref": "#/definitions/Contract"
+					},
+					"type": "array"
+				}
+			},
+			"required": [
+				"id",
+				"name",
+				"email",
+				"address",
+				"contracts"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"Task": {
+			"properties": {
+				"id": {
+					"type": "integer",
+					"format": "int32"
+				},
+				"contract": {
+					"$ref": "#/definitions/Contract"
+				},
+				"name": {
+					"type": "string"
+				},
+				"description": {
+					"type": "string"
+				},
+				"doneTo": {
+					"type": "string",
+					"format": "date-time",
+					"description": "Выполнить задачу ДО"
+				},
+				"creationDate": {
+					"type": "string",
+					"format": "date-time",
+					"x-nullable": true
+				}
+			},
+			"required": [
+				"id",
+				"contract",
+				"name",
+				"description",
+				"doneTo"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"BusinessRequest": {
+			"properties": {
+				"id": {
+					"type": "integer",
+					"format": "int32"
+				},
+				"message": {
+					"type": "string"
+				},
+				"isHandled": {
+					"type": "boolean"
+				},
+				"user": {
+					"$ref": "#/definitions/User"
+				},
+				"contract": {
+					"$ref": "#/definitions/Contract"
+				},
+				"creationDate": {
+					"type": "string",
+					"format": "date-time",
+					"x-nullable": true
+				}
+			},
+			"required": [
+				"id",
+				"message",
+				"isHandled",
+				"user",
+				"contract"
 			],
 			"type": "object",
 			"additionalProperties": false
@@ -117,119 +297,122 @@
 			"type": "object",
 			"additionalProperties": false
 		},
-		"Client": {
-			"properties": {
-				"id": {
-					"type": "integer",
-					"format": "int32"
-				},
-				"name": {
-					"type": "string"
-				},
-				"creationDate": {
-					"type": "string",
-					"format": "date-time",
-					"x-nullable": true
-				},
-				"contracts": {
-					"items": {
-						"$ref": "#/definitions/Contract"
-					},
-					"type": "array"
-				}
-			},
-			"required": [
-				"id",
-				"name",
-				"contracts"
-			],
-			"type": "object",
-			"additionalProperties": false
-		},
-		"Contract": {
-			"properties": {
-				"id": {
-					"type": "integer",
-					"format": "int32"
-				},
-				"client": {
-					"$ref": "#/definitions/Client"
-				},
-				"name": {
-					"type": "string"
-				},
-				"tasks": {
-					"items": {
-						"$ref": "#/definitions/Task"
-					},
-					"type": "array"
-				},
-				"creationDate": {
-					"type": "string",
-					"format": "date-time",
-					"x-nullable": true
-				}
-			},
-			"required": [
-				"id",
-				"client",
-				"name",
-				"tasks"
-			],
-			"type": "object",
-			"additionalProperties": false
-		},
-		"Task": {
-			"properties": {
-				"id": {
-					"type": "integer",
-					"format": "int32"
-				},
-				"contract": {
-					"$ref": "#/definitions/Contract"
-				},
-				"name": {
-					"type": "string"
-				},
-				"creationDate": {
-					"type": "string",
-					"format": "date-time",
-					"x-nullable": true
-				}
-			},
-			"required": [
-				"id",
-				"contract",
-				"name"
-			],
-			"type": "object",
-			"additionalProperties": false
-		},
 		"IClientCreateRequestBody": {
 			"properties": {
 				"name": {
 					"type": "string"
+				},
+				"email": {
+					"type": "string",
+					"maxLength": 128
+				},
+				"address": {
+					"type": "string"
+				},
+				"comment": {
+					"type": "string",
+					"x-nullable": true
 				}
 			},
 			"required": [
-				"name"
+				"name",
+				"email",
+				"address"
 			],
 			"type": "object",
 			"additionalProperties": false
 		},
 		"IContractCreateRequestBody": {
 			"properties": {
-				"name": {
-					"type": "string"
-				},
 				"clientId": {
 					"type": "integer",
 					"format": "int32"
+				},
+				"name": {
+					"type": "string"
+				},
+				"conclusionDate": {
+					"type": "string",
+					"format": "date-time"
+				},
+				"comment": {
+					"type": "string",
+					"x-nullable": true
 				}
 			},
 			"required": [
+				"clientId",
 				"name",
-				"clientId"
+				"conclusionDate"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"ISetHandledBody": {
+			"properties": {
+				"requestId": {
+					"type": "integer",
+					"format": "int32"
+				},
+				"email": {
+					"type": "string"
+				},
+				"answer": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"requestId",
+				"email",
+				"answer"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"IRequestCreateBody": {
+			"properties": {
+				"userId": {
+					"type": "integer",
+					"format": "int32"
+				},
+				"contractId": {
+					"type": "integer",
+					"format": "int32"
+				},
+				"message": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"userId",
+				"contractId",
+				"message"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"ITaskCreateRequestBody": {
+			"properties": {
+				"contractId": {
+					"type": "integer",
+					"format": "int32"
+				},
+				"name": {
+					"type": "string"
+				},
+				"description": {
+					"type": "string"
+				},
+				"doneTo": {
+					"type": "string",
+					"format": "date-time"
+				}
+			},
+			"required": [
+				"contractId",
+				"name",
+				"description",
+				"doneTo"
 			],
 			"type": "object",
 			"additionalProperties": false
@@ -384,6 +567,13 @@
 							"type": "object"
 						}
 					},
+					"201": {
+						"description": "Клиент успешно добавлен",
+						"schema": {
+							"type": "number",
+							"format": "double"
+						}
+					},
 					"406": {
 						"description": "Ошибка добавление нового клиента в базу",
 						"schema": {
@@ -431,7 +621,11 @@
 				"tags": [
 					"Contracts"
 				],
-				"security": [],
+				"security": [
+					{
+						"JWT": []
+					}
+				],
 				"parameters": [
 					{
 						"in": "query",
@@ -454,6 +648,13 @@
 							"type": "object"
 						}
 					},
+					"201": {
+						"description": "Клиент успешно добавлен",
+						"schema": {
+							"type": "number",
+							"format": "double"
+						}
+					},
 					"406": {
 						"description": "Ошибка добавление нового договора в базу",
 						"schema": {
@@ -464,7 +665,11 @@
 				"tags": [
 					"Contracts"
 				],
-				"security": [],
+				"security": [
+					{
+						"JWT": []
+					}
+				],
 				"parameters": [
 					{
 						"in": "body",
@@ -472,6 +677,154 @@
 						"required": true,
 						"schema": {
 							"$ref": "#/definitions/IContractCreateRequestBody"
+						}
+					}
+				]
+			}
+		},
+		"/business-requests/pending-count": {
+			"get": {
+				"operationId": "GetPendingCount",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"type": "number",
+							"format": "double"
+						}
+					}
+				},
+				"tags": [
+					"BusinessRequests"
+				],
+				"security": [
+					{
+						"JWT": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/business-requests": {
+			"get": {
+				"operationId": "GetAll",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"items": {
+								"$ref": "#/definitions/BusinessRequest"
+							},
+							"type": "array"
+						}
+					}
+				},
+				"tags": [
+					"BusinessRequests"
+				],
+				"security": [
+					{
+						"JWT": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/business-requests/set-handled": {
+			"patch": {
+				"operationId": "SetHandled",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"type": "object"
+						}
+					},
+					"201": {
+						"description": "Обращение успешно обработано",
+						"schema": {
+							"type": "number",
+							"format": "double"
+						}
+					},
+					"500": {
+						"description": "Ошибка обработки обращения",
+						"schema": {
+							"$ref": "#/definitions/IError"
+						}
+					}
+				},
+				"tags": [
+					"BusinessRequests"
+				],
+				"security": [
+					{
+						"JWT": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "requestBody",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/ISetHandledBody"
+						}
+					}
+				]
+			}
+		},
+		"/business-requests/insert": {
+			"post": {
+				"operationId": "InsertContract",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"type": "object"
+						}
+					},
+					"201": {
+						"description": "Обращение успешно добавлено",
+						"schema": {
+							"type": "number",
+							"format": "double"
+						}
+					},
+					"406": {
+						"description": "Ошибка добавление нового обращения в базу",
+						"schema": {
+							"$ref": "#/definitions/IError"
+						}
+					}
+				},
+				"tags": [
+					"BusinessRequests"
+				],
+				"security": [
+					{
+						"JWT": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "requestBody",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/IRequestCreateBody"
 						}
 					}
 				]
@@ -497,7 +850,11 @@
 				"tags": [
 					"Tasks"
 				],
-				"security": [],
+				"security": [
+					{
+						"JWT": []
+					}
+				],
 				"parameters": [
 					{
 						"in": "query",
@@ -505,6 +862,51 @@
 						"required": false,
 						"format": "int32",
 						"type": "integer"
+					}
+				]
+			},
+			"post": {
+				"operationId": "Insert",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"type": "object"
+						}
+					},
+					"201": {
+						"description": "Задача успешно добавлен",
+						"schema": {
+							"type": "number",
+							"format": "double"
+						}
+					},
+					"406": {
+						"description": "Ошибка добавление новой задачи в базу",
+						"schema": {
+							"$ref": "#/definitions/IError"
+						}
+					}
+				},
+				"tags": [
+					"Tasks"
+				],
+				"security": [
+					{
+						"JWT": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "requestBody",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/ITaskCreateRequestBody"
+						}
 					}
 				]
 			}
