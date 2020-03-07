@@ -3,12 +3,12 @@ import bodyParser from 'body-parser';
 import passport from 'passport';
 import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
+import { ValidateError, FieldErrors } from 'tsoa';
+import { join } from 'path';
 import swaggerConfig from '../../swagger.json';
 import tsoaConfig from '../../tsoa.json';
 import config from '../config';
 import { RegisterRoutes } from '../api/routes';
-import { getPureError } from '../utils/error-stringify';
-import { ValidateError, FieldErrors } from 'tsoa';
 import { IError } from '../core/types.js';
 import { Errors } from '../utils/errors.js';
 import { CodeError } from '../utils/error-with-code.js';
@@ -20,18 +20,21 @@ export default (): void => {
   app.use(bodyParser.json());
 
   if (development) {
-    console.log('application started in development mode');
     app.use(cors());
     app.get('/', (req: Request, res: Response) => {
       res.redirect('http://localhost:3000');
     });
-  } else {
-    app.use(express.static(config.staticPath));
   }
+  app.use(express.static(config.staticPath));
 
   app.use(passport.initialize());
   RegisterRoutes(app);
   app.use(tsoaConfig.swagger.basePath + '/docs', swaggerUi.serve, swaggerUi.setup(swaggerConfig));
+
+  // Handles any requests that don't match the ones above
+  app.get('*', (req: Request, res: Response) =>{
+    res.sendFile(join(process.cwd(), '/public/index.html'));
+  });
 
   /* eslint-disable @typescript-eslint/no-unused-vars */
   /* eslint-disable @typescript-eslint/no-explicit-any */

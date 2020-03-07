@@ -1,12 +1,14 @@
-import { Controller, Route, Get, Query, Post, Body, Response, Tags, Security } from 'tsoa';
-import * as HttpStatus from 'http-status-codes';
+import { Controller, Route, Get, Query, Post, Body, Response, Tags, Security, Request, SuccessResponse } from 'tsoa';
+import * as multer from 'multer';
+import * as express from 'express';
+import { sep } from 'path';
 import { Contract } from '../../models/contract';
 import Container from 'typedi';
 import { ContractsService } from '../../services/contracts';
-import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { IError } from '../../core/types';
 import { Errors } from '../../utils/errors';
 import { CodeError } from '../../utils/error-with-code';
+import multerUpload from '../../utils/multer-uploader';
 
 interface IContractCreateRequestBody {
   /**
@@ -15,7 +17,12 @@ interface IContractCreateRequestBody {
   clientId: number;
   name: string;
   conclusionDate: Date;
+  copyPath: string;
   comment?: string;
+}
+
+interface ICopyUploadResponse {
+  contentPath: string;
 }
 
 @Tags('Contracts')
@@ -49,7 +56,7 @@ export class ContractsController extends Controller {
         name: requestBody.name,
         conclusionDate: requestBody.conclusionDate,
         comment: requestBody.comment,
-        scanPath: 'TODO', // TODO
+        scanPath: requestBody.copyPath,
         client: {
           id: requestBody.clientId,
         },
@@ -60,5 +67,35 @@ export class ContractsController extends Controller {
           406,
           err.message);
     }
+  }
+
+  @SuccessResponse('201', 'Договор успешно загружен')
+  @Response<ICopyUploadResponse>('201')
+  @Response<IError>('406', 'Ошибка загрузки договора на сервер')
+  @Post('/uploadCopyFile')
+  public async uploadContractCopy(@Request() requestBody: express.Request): Promise<ICopyUploadResponse | IError> {
+    try {
+      const file = await this.handleContractCopyFile(requestBody);
+      return {
+        contentPath: file.path.replace(`public${sep}`, ''),
+      };
+    } catch (err) {
+      return {
+        code: Errors.FILE_UPLOAD_ERROR,
+        message: err.message,
+      };
+    }
+  }
+
+  private handleContractCopyFile(requestBody: express.Request): Promise<Express.Multer.File> {
+    const multerSingle = multerUpload.single('contractCopyFile');
+    return new Promise((resolve, reject) => {
+      multerSingle(requestBody, undefined, async (error) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(requestBody.file);
+      });
+    });
   }
 }
