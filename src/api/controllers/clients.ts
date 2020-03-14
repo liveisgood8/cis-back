@@ -1,11 +1,13 @@
-import { Controller, Route, Get, Tags, Query, Body, Post, Response, Security } from 'tsoa';
+import { Controller, Route, Get, Tags, Query, Body, Post, Response, Security, Request } from 'tsoa';
 import Container from 'typedi';
 import { Client } from '../../models/client';
 import { ClientsService } from '../../services/clients';
 import { IError } from '../../core/types';
-import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { Errors } from '../../utils/errors';
 import { CodeError } from '../../utils/error-with-code';
+import { PermissionsService } from '../../services/permissions';
+import { Permissions } from '../../models/permissions';
+import { User } from '../../models/user';
 
 interface IClientCreateRequestBody {
   name: string;
@@ -22,10 +24,12 @@ interface IClientCreateRequestBody {
 @Route('/clients')
 export class ClientsController extends Controller {
   private service: ClientsService;
+  private permissionService: PermissionsService;
 
   constructor() {
     super();
     this.service = Container.get(ClientsService);
+    this.permissionService = Container.get(PermissionsService);
   }
 
   /**
@@ -39,11 +43,14 @@ export class ClientsController extends Controller {
   }
 
   @Response<number>('201', 'Клиент успешно добавлен')
+  @Response<IError>('403', 'Нет прав для добавление нового клиента')
   @Response<IError>('406', 'Ошибка добавление нового клиента в базу')
   @Post()
   public async insert(
     @Body() requestBody: IClientCreateRequestBody,
+    @Request() req: Express.Request,
   ): Promise<number | IError> {
+    await this.permissionService.mustHavePermission((req.user as User).id, Permissions.ADD_CLIENTS);
     try {
       this.setStatus(201);
       return await this.service.insert({

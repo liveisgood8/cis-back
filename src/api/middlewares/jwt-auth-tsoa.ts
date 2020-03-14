@@ -33,7 +33,7 @@ export function expressAuthentication(request: Request,
           //     reject(new Error('JWT does not contain required scope'));
           //   }
           // }
-          resolve(decoded);
+          resolve(decoded.user);
         }
       });
     });
