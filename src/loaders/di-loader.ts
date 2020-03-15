@@ -11,6 +11,8 @@ import { TasksService } from '../services/tasks';
 import { Task } from '../models/task';
 import { PermissionsService } from '../services/permissions';
 import { UserPermissions } from '../models/permissions';
+import { BusinessRequestsService } from '../services/requests';
+import { BusinessRequest } from '../models/request';
 
 export default (): void => {
   Container.set(AuthService, new AuthService(getRepository(User)));
@@ -19,4 +21,5 @@ export default (): void => {
   Container.set(ContractsService, new ContractsService(getRepository(Contract)));
   Container.set(TasksService, new TasksService(getRepository(Task)));
   Container.set(PermissionsService, new PermissionsService(getRepository(UserPermissions)));
+  Container.set(BusinessRequestsService, new BusinessRequestsService(getRepository(BusinessRequest)));
 };

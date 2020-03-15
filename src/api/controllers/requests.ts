@@ -29,6 +29,9 @@ interface ISetHandledBody {
   answer: string;
 }
 
+interface IGetPendingNumberResponse {
+  pendingNumber: number;
+}
 
 @Tags('BusinessRequests')
 @Security('JWT')
@@ -41,9 +44,12 @@ export class BusinessRequestsController extends Controller {
     this.service = Container.get(BusinessRequestsService);
   }
 
-  @Get('/pending-count')
-  public async getPendingCount(@Request() req: ExpressRequest): Promise<number> {
-    return this.service.getPendingCountForUser((req.user as User).id);
+  @Get('/pending-number')
+  public async getPendingCount(@Request() req: ExpressRequest): Promise<IGetPendingNumberResponse> {
+    const pendingNumber = await this.service.getPendingCountForUser((req.user as User).id);
+    return {
+      pendingNumber: pendingNumber,
+    };
   }
 
 
