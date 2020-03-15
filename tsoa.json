@@ -50,6 +50,10 @@
       {
         "name": "Users",
         "description": "Operations about auth"
+      },
+      {
+        "name": "Permissions",
+        "description": "Operations about user permissions"
       }
     ]
   },

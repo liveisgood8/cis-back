@@ -62,7 +62,7 @@ export class BusinessRequestsController extends Controller {
   @Response<number>('201', 'Обращение успешно добавлено')
   @Response<IError>('406', 'Ошибка добавление нового обращения в базу')
   @Post()
-  public async insertContract(@Body() requestBody: IRequestCreateBody): Promise<number | IError> {
+  public async insert(@Body() requestBody: IRequestCreateBody): Promise<number | IError> {
     try {
       this.setStatus(201);
       return await this.service.insert({

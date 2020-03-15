@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from 'typeorm';
 import { BusinessRequest } from './request';
+import { UserPermissions } from './permissions';
 
 @Entity()
 export class User {
@@ -26,6 +27,9 @@ export class User {
 
   @OneToMany((type) => BusinessRequest, (businessRequest) => businessRequest.user)
   requests: BusinessRequest[];
+
+  @OneToMany((type) => UserPermissions, (userPermissions) => userPermissions.user)
+  permissions: UserPermissions[];
 
   @CreateDateColumn()
   creationDate?: Date;

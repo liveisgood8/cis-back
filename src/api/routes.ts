@@ -9,6 +9,8 @@ import { ClientsController } from './controllers/clients';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ContractsController } from './controllers/contracts';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { PermissionsController } from './controllers/permissions';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { BusinessRequestsController } from './controllers/requests';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { TasksController } from './controllers/tasks';
@@ -30,6 +32,7 @@ const models: TsoaRoute.Models = {
             "surname": { "dataType": "string" },
             "imageId": { "dataType": "double", "required": true },
             "requests": { "dataType": "array", "array": { "ref": "BusinessRequest" }, "required": true },
+            "permissions": { "dataType": "array", "array": { "ref": "UserPermissions" }, "required": true },
             "creationDate": { "dataType": "datetime" },
         },
         "additionalProperties": false,
@@ -91,6 +94,16 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UserPermissions": {
+        "dataType": "refObject",
+        "properties": {
+            "id": { "dataType": "double", "required": true },
+            "user": { "ref": "User", "required": true },
+            "permissionId": { "dataType": "double", "required": true },
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ILoginResult": {
         "dataType": "refObject",
         "properties": {
@@ -103,7 +116,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Errors": {
         "dataType": "refEnum",
-        "enums": [1, 2, 3, 4, 5, 6, 7],
+        "enums": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "IError": {
@@ -165,6 +178,11 @@ const models: TsoaRoute.Models = {
             "contentPath": { "dataType": "string", "required": true },
         },
         "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Permissions": {
+        "dataType": "refEnum",
+        "enums": [1, 2, 3, 4],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ISetHandledBody": {
@@ -301,6 +319,7 @@ export function RegisterRoutes(app: express.Express) {
         function(request: any, response: any, next: any) {
             const args = {
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "IClientCreateRequestBody" },
+                req: { "in": "request", "name": "req", "required": true, "dataType": "object" },
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -346,6 +365,7 @@ export function RegisterRoutes(app: express.Express) {
         authenticateMiddleware([{ "JWT": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                req: { "in": "request", "name": "req", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "IContractCreateRequestBody" },
             };
 
@@ -385,6 +405,29 @@ export function RegisterRoutes(app: express.Express) {
 
 
             const promise = controller.uploadContractCopy.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    app.get('/api/v1/permissions',
+        authenticateMiddleware([{ "JWT": [] }]),
+        function(request: any, response: any, next: any) {
+            const args = {
+                req: { "in": "request", "name": "req", "required": true, "dataType": "object" },
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new PermissionsController();
+
+
+            const promise = controller.getAll.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -476,7 +519,7 @@ export function RegisterRoutes(app: express.Express) {
             const controller = new BusinessRequestsController();
 
 
-            const promise = controller.insertContract.apply(controller, validatedArgs as any);
+            const promise = controller.insert.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -507,6 +550,7 @@ export function RegisterRoutes(app: express.Express) {
         authenticateMiddleware([{ "JWT": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                req: { "in": "request", "name": "req", "required": true, "dataType": "object" },
                 requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "ITaskCreateRequestBody" },
             };
 

@@ -1,8 +1,8 @@
 import { Service } from 'typedi';
 import { Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-import { Client } from '../models/client';
 import { BusinessRequest } from '../models/request';
+import { User } from '../models/user';
 
 @Service()
 export class BusinessRequestsService {
@@ -11,23 +11,23 @@ export class BusinessRequestsService {
   ) { }
 
   public async getForUser(id: number): Promise<BusinessRequest[]> {
-    const client = new Client();
-    client.id = id;
+    const user = new User();
+    user.id = id;
 
     return this.requestsRepository.find({
       where: {
-        client: client,
+        user: user,
       },
     });
   }
 
   public async getPendingCountForUser(id: number): Promise<number> {
-    const client = new Client();
-    client.id = id;
+    const user = new User();
+    user.id = id;
 
     return this.requestsRepository.count({
       where: {
-        client: client,
+        user: user,
       },
     });
   }

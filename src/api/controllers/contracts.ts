@@ -9,6 +9,9 @@ import { IError } from '../../core/types';
 import { Errors } from '../../utils/errors';
 import { CodeError } from '../../utils/error-with-code';
 import multerUpload from '../../utils/multer-uploader';
+import { PermissionsService } from '../../services/permissions';
+import { User } from '../../models/user';
+import { Permissions } from '../../models/permissions';
 
 interface IContractCreateRequestBody {
   /**
@@ -30,10 +33,12 @@ interface ICopyUploadResponse {
 @Route('/contracts')
 export class ContractsController extends Controller {
   private service: ContractsService;
+  private permissionService: PermissionsService;
 
   constructor() {
     super();
     this.service = Container.get(ContractsService);
+    this.permissionService = Container.get(PermissionsService);
   }
 
   /**
@@ -47,9 +52,14 @@ export class ContractsController extends Controller {
   }
 
   @Response<number>('201', 'Клиент успешно добавлен')
+  @Response<IError>('403', 'Нет прав для добавление нового договора')
   @Response<IError>('406', 'Ошибка добавление нового договора в базу')
   @Post()
-  public async insertContract(@Body() requestBody: IContractCreateRequestBody): Promise<number | IError> {
+  public async insertContract(
+    @Request() req: Express.Request,
+    @Body() requestBody: IContractCreateRequestBody,
+  ): Promise<number | IError> {
+    await this.permissionService.mustHavePermission((req.user as User).id, Permissions.ADD_CONTRACTS);
     try {
       this.setStatus(201);
       return await this.service.insert({

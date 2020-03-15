@@ -32,9 +32,11 @@ export default (): void => {
   app.use(tsoaConfig.swagger.basePath + '/docs', swaggerUi.serve, swaggerUi.setup(swaggerConfig));
 
   // Handles any requests that don't match the ones above
-  app.get('*', (req: Request, res: Response) =>{
-    res.sendFile(join(process.cwd(), '/public/index.html'));
-  });
+  if (!development) {
+    app.get('*', (req: Request, res: Response) =>{
+      res.sendFile(join(process.cwd(), '/public/index.html'));
+    });
+  }
 
   /* eslint-disable @typescript-eslint/no-unused-vars */
   /* eslint-disable @typescript-eslint/no-explicit-any */
