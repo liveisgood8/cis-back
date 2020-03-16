@@ -85,6 +85,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "id": { "dataType": "integer", "required": true, "validators": { "isInt": { "errorMsg": "Contract id should be an integer" } } },
+            "title": { "dataType": "string", "required": true },
             "message": { "dataType": "string", "required": true },
             "isHandled": { "dataType": "boolean", "required": true },
             "user": { "ref": "User", "required": true },
@@ -116,7 +117,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Errors": {
         "dataType": "refEnum",
-        "enums": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        "enums": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "IError": {
@@ -183,6 +184,14 @@ const models: TsoaRoute.Models = {
     "Permissions": {
         "dataType": "refEnum",
         "enums": [1, 2, 3, 4],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IGetPendingNumberResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "pendingNumber": { "dataType": "double", "required": true },
+        },
+        "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ISetHandledBody": {

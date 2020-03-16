@@ -1,4 +1,4 @@
-import { Controller, Post, Route, Response, Body, Tags } from 'tsoa';
+import { Controller, Post, Route, Response, Body, Tags, SuccessResponse } from 'tsoa';
 import Container from 'typedi';
 import { AuthService } from '../../services/auth';
 import { ILoginResult, IError } from '../../core/types';
@@ -24,10 +24,10 @@ export class AuthController extends Controller {
   @Post('/login')
   public async login(
     @Body() requestBody: ILoginRequestBody,
-  ): Promise<ILoginResult | IError> {
+  ): Promise<ILoginResult> {
     const authService = Container.get(AuthService);
     this.setStatus(202);
-    return authService.login(requestBody.login, requestBody.password);
+    return await authService.login(requestBody.login, requestBody.password);
   }
 
   @Post('/logout')
@@ -35,11 +35,21 @@ export class AuthController extends Controller {
     // TODO
   }
 
+  @SuccessResponse('202')
+  @Response<ILoginResult>('202', 'Аутентификация успешна')
   @Response<IError>('400', 'Ошибка при регистрации')
   @Post('/register')
   public async register(
     @Body() requestBody: IRegisterRequestBody,
-  ): Promise<void | IError> {
-    // TODO
+  ): Promise<void> {
+    const authService = Container.get(AuthService);
+    this.setStatus(202);
+    return await authService.register(
+        requestBody.login,
+        requestBody.password,
+        requestBody.name,
+        requestBody.surname,
+        requestBody.imageId,
+    );
   }
 }

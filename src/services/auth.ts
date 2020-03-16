@@ -2,7 +2,6 @@ import { Service } from 'typedi';
 import { Repository } from 'typeorm';
 import { sign } from 'jsonwebtoken';
 import { createHash } from 'crypto';
-import * as HttpStatus from 'http-status-codes';
 import { User } from '../models/user';
 import config from '../config';
 import { ILoginResult } from '../core/types';
@@ -24,15 +23,12 @@ export class AuthService {
         .getOne();
     if (!user) {
       throw new CodeError(Errors.AUTH_USER_NOT_FOUND,
-          HttpStatus.NOT_ACCEPTABLE);
+          406);
     }
-    /**
-     * TODO Передавать уже захешированный пароль со стороны клиента
-     * TODO Вернуть хеширование пароля
-     */
-    if (password !== user.password) {
+
+    if (this.getPasswordHashWithSalt(password) !== user.password) {
       throw new CodeError(Errors.AUTH_WRONG_PASSWORD,
-          HttpStatus.NOT_ACCEPTABLE);
+          406);
     }
     delete user.password;
 
@@ -51,7 +47,31 @@ export class AuthService {
     };
   }
 
-  private getPasswordHash(password: string): string {
+  public async register(
+      login: string,
+      password: string,
+      name: string,
+      surname: string,
+      imageId: number,
+  ): Promise<void> {
+    const user = await this.userRepository.findOne({
+      where: {
+        login: login,
+      },
+    });
+    if (user) {
+      throw new CodeError(Errors.REGISTER_USER_IS_EXIST, 406);
+    }
+    await this.userRepository.insert({
+      login,
+      password: this.getPasswordHashWithSalt(password),
+      name,
+      surname,
+      imageId,
+    });
+  }
+
+  private getPasswordHashWithSalt(password: string): string {
     const saltedPassword = password + config.passwordSalt;
     const hash = createHash('md5').update(saltedPassword).digest('base64');
     return hash;

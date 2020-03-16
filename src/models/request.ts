@@ -11,6 +11,9 @@ export class BusinessRequest {
   id: number;
 
   @Column()
+  title: string;
+
+  @Column()
   message: string;
 
   @Column()

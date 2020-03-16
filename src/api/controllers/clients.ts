@@ -9,7 +9,7 @@ import { PermissionsService } from '../../services/permissions';
 import { Permissions } from '../../models/permissions';
 import { User } from '../../models/user';
 
-interface IClientCreateRequestBody {
+interface   IClientCreateRequestBody {
   name: string;
   /**
    * @maxLength 128

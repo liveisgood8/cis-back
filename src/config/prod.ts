@@ -3,7 +3,7 @@ import { IConfig } from './types';
 export const config: IConfig = {
   expressPort: 80,
   staticPath: './public',
-  passwordSalt: 'password_salt',
+  passwordSalt: 'password_salt_very_strong',
   jwt: {
     audience: 'www.cis.com',
     access: {
