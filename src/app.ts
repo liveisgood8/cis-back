@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import loaders from './loaders';
 
 async function main(): Promise<void> {

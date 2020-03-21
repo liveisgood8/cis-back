@@ -13,6 +13,7 @@ import { PermissionsService } from '../services/permissions';
 import { UserPermissions } from '../models/permissions';
 import { BusinessRequestsService } from '../services/requests';
 import { BusinessRequest } from '../models/request';
+import { MailService } from '../services/mail';
 
 export default (): void => {
   Container.set(AuthService, new AuthService(getRepository(User)));
@@ -22,4 +23,5 @@ export default (): void => {
   Container.set(TasksService, new TasksService(getRepository(Task)));
   Container.set(PermissionsService, new PermissionsService(getRepository(UserPermissions)));
   Container.set(BusinessRequestsService, new BusinessRequestsService(getRepository(BusinessRequest)));
+  Container.set(MailService, new MailService());
 };

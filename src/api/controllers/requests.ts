@@ -1,5 +1,5 @@
-import { Controller, Route, Get, Post, Body, Response, Tags, Security, Request, Patch } from 'tsoa';
-import Container from 'typedi';
+import { Controller, Route, Get, Post, Body, Response, Tags, Security, Request, Patch, Query } from 'tsoa';
+import Container, { Inject } from 'typedi';
 import { IError } from '../../core/types';
 import { Errors } from '../../utils/errors';
 import { CodeError } from '../../utils/error-with-code';
@@ -7,6 +7,7 @@ import { BusinessRequest } from '../../models/request';
 import { BusinessRequestsService } from '../../services/requests';
 import { Request as ExpressRequest} from 'express';
 import { User } from '../../models/user';
+import { MailService } from '../../services/mail';
 
 interface IRequestCreateBody {
   /**
@@ -38,14 +39,17 @@ interface IGetPendingNumberResponse {
 @Route('/business-requests')
 export class BusinessRequestsController extends Controller {
   private service: BusinessRequestsService;
+  private mailService: MailService;
 
   constructor() {
     super();
     this.service = Container.get(BusinessRequestsService);
+    this.mailService = Container.get(MailService);
   }
 
   @Get('/pending-number')
   public async getPendingCount(@Request() req: ExpressRequest): Promise<IGetPendingNumberResponse> {
+    console.log(this.service, this.mailService);
     const pendingNumber = await this.service.getPendingCountForUser((req.user as User).id);
     return {
       pendingNumber: pendingNumber,
@@ -53,16 +57,35 @@ export class BusinessRequestsController extends Controller {
   }
 
 
+  /** @isInt id Request id must be a number */
   @Get()
-  public async getAll(@Request() req: ExpressRequest): Promise<BusinessRequest[]> {
-    return this.service.getForUser((req.user as User).id);
+  public async getByIdOrAll(
+    @Request() req: ExpressRequest,
+    @Query('id') id?: number,
+  ): Promise<BusinessRequest[] | BusinessRequest> {
+    if (id) {
+      return this.service.getByIdForUser(id, (req.user as User).id);
+    } else {
+      return this.service.getForUser((req.user as User).id);
+    }
   }
 
   @Response<number>('201', 'Обращение успешно обработано')
   @Response<IError>('500', 'Ошибка обработки обращения')
   @Patch()
   public async setHandled(@Body() requestBody: ISetHandledBody): Promise<void | IError> {
-    // TODO
+    try {
+      this.setStatus(201);
+      this.service.handle(requestBody.requestId, {
+        email: requestBody.email,
+        message: requestBody.answer,
+      });
+    } catch (err) {
+      this.setStatus(500);
+      throw new CodeError(Errors.UPDATE_ENTITY_ERROR,
+          406,
+          err.message);
+    }
   }
 
   @Response<number>('201', 'Обращение успешно добавлено')

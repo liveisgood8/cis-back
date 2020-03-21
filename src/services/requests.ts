@@ -1,39 +1,72 @@
-import { Service } from 'typedi';
-import { Repository } from 'typeorm';
+import Container, { Service } from 'typedi';
+import { Repository, getConnection } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { BusinessRequest } from '../models/request';
 import { User } from '../models/user';
+import { MailService } from './mail';
+
+interface IAnswer {
+  email: string;
+  message: string;
+}
 
 @Service()
 export class BusinessRequestsService {
+  private mailService: MailService;
+
   constructor(
     private requestsRepository: Repository<BusinessRequest>,
-  ) { }
+  ) {
+    this.mailService = Container.get(MailService);
+  }
 
-  public async getForUser(id: number): Promise<BusinessRequest[]> {
+  public async getByIdForUser(id: number, userId: number): Promise<BusinessRequest | undefined> {
+    return this.requestsRepository.findOne(id, {
+      relations: ['contract', 'contract.client'],
+      where: {
+        user: {
+          id: userId,
+        },
+        isHandled: false,
+      },
+    });
+  }
+
+  public async getForUser(userId: number): Promise<BusinessRequest[]> {
     const user = new User();
-    user.id = id;
+    user.id = userId;
 
     return this.requestsRepository.find({
       where: {
         user: user,
+        isHandled: false,
       },
     });
   }
 
-  public async getPendingCountForUser(id: number): Promise<number> {
-    const user = new User();
-    user.id = id;
-
+  public async getPendingCountForUser(userId: number): Promise<number> {
     return this.requestsRepository.count({
       where: {
-        user: user,
+        user: {
+          id: userId,
+        },
+        isHandled: false,
       },
     });
   }
 
-  public async insert(contract: QueryDeepPartialEntity<BusinessRequest>): Promise<number> {
-    const result = await this.requestsRepository.insert(contract);
+  public async handle(requestId: number, answer: IAnswer): Promise<void> {
+    await getConnection().transaction(async (transactionEntityManage) => {
+      transactionEntityManage.save<Partial<BusinessRequest>>({
+        id: requestId,
+        isHandled: true,
+      });
+      this.mailService.sendEmail(answer.email, answer.message);
+    });
+  }
+
+  public async insert(request: QueryDeepPartialEntity<BusinessRequest>): Promise<number> {
+    const result = await this.requestsRepository.insert(request);
     return result.identifiers[0].id;
   }
 }
