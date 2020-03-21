@@ -4,5 +4,6 @@ import { Service } from 'typedi';
 export class MailService {
   sendEmail(to: string, messageBody: string): void {
     // TODO
+    console.log('send email:', to, messageBody);
   }
 }

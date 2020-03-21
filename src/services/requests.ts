@@ -1,5 +1,5 @@
 import Container, { Service } from 'typedi';
-import { Repository, getConnection } from 'typeorm';
+import { Repository, getConnection, DeepPartial } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { BusinessRequest } from '../models/request';
 import { User } from '../models/user';
@@ -57,16 +57,17 @@ export class BusinessRequestsService {
 
   public async handle(requestId: number, answer: IAnswer): Promise<void> {
     await getConnection().transaction(async (transactionEntityManage) => {
-      transactionEntityManage.save<Partial<BusinessRequest>>({
+      const request = transactionEntityManage.create(BusinessRequest, {
         id: requestId,
         isHandled: true,
       });
+      transactionEntityManage.save(request);
       this.mailService.sendEmail(answer.email, answer.message);
     });
   }
 
-  public async insert(request: QueryDeepPartialEntity<BusinessRequest>): Promise<number> {
-    const result = await this.requestsRepository.insert(request);
-    return result.identifiers[0].id;
+  public async save(request: DeepPartial<BusinessRequest>): Promise<BusinessRequest> {
+    const result = await this.requestsRepository.save(request);
+    return result;
   }
 }

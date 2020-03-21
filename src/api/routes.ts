@@ -117,7 +117,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Errors": {
         "dataType": "refEnum",
-        "enums": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+        "enums": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "IError": {
@@ -209,6 +209,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "userId": { "dataType": "integer", "required": true, "validators": { "isInt": { "errorMsg": "userId must be an integer" } } },
             "contractId": { "dataType": "integer", "required": true, "validators": { "isInt": { "errorMsg": "contractId must be an integer" } } },
+            "title": { "dataType": "string", "required": true },
             "message": { "dataType": "string", "required": true },
         },
         "additionalProperties": false,

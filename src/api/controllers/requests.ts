@@ -18,6 +18,7 @@ interface IRequestCreateBody {
    * @isInt contractId must be an integer
    */
   contractId: number;
+  title: string;
   message: string;
 }
 
@@ -76,7 +77,7 @@ export class BusinessRequestsController extends Controller {
   public async setHandled(@Body() requestBody: ISetHandledBody): Promise<void | IError> {
     try {
       this.setStatus(201);
-      this.service.handle(requestBody.requestId, {
+      await this.service.handle(requestBody.requestId, {
         email: requestBody.email,
         message: requestBody.answer,
       });
@@ -91,10 +92,10 @@ export class BusinessRequestsController extends Controller {
   @Response<number>('201', 'Обращение успешно добавлено')
   @Response<IError>('406', 'Ошибка добавление нового обращения в базу')
   @Post()
-  public async insert(@Body() requestBody: IRequestCreateBody): Promise<number | IError> {
+  public async insert(@Body() requestBody: IRequestCreateBody): Promise<BusinessRequest | IError> {
     try {
       this.setStatus(201);
-      return await this.service.insert({
+      return await this.service.save({
         contract: {
           id: requestBody.contractId,
         },
@@ -102,6 +103,7 @@ export class BusinessRequestsController extends Controller {
           id: requestBody.userId,
         },
         isHandled: false,
+        title: requestBody.title,
         message: requestBody.message,
       });
     } catch (err) {
