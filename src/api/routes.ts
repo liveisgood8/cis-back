@@ -199,7 +199,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "requestId": { "dataType": "integer", "required": true, "validators": { "isInt": { "errorMsg": "requestId must be an integer" } } },
             "email": { "dataType": "string", "required": true },
-            "answer": { "dataType": "string", "required": true },
+            "answer": { "dataType": "nestedObjectLiteral", "nestedProperties": { "body": { "dataType": "string", "required": true }, "subject": { "dataType": "string", "required": true } }, "required": true },
         },
         "additionalProperties": false,
     },

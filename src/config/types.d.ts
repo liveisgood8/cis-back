@@ -2,6 +2,9 @@ export interface IConfig {
   expressPort: number;
   staticPath: string;
   passwordSalt: string;
+  mail: {
+    from: string;
+  };
   jwt: {
     audience: string;
     access: {

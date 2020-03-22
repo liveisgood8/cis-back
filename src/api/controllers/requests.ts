@@ -28,7 +28,10 @@ interface ISetHandledBody {
    */
   requestId: number;
   email: string;
-  answer: string;
+  answer: {
+    subject: string;
+    body: string;
+  };
 }
 
 interface IGetPendingNumberResponse {
@@ -79,7 +82,10 @@ export class BusinessRequestsController extends Controller {
       this.setStatus(201);
       await this.service.handle(requestBody.requestId, {
         email: requestBody.email,
-        message: requestBody.answer,
+        message: {
+          subject: requestBody.answer.subject,
+          body: requestBody.answer.body,
+        },
       });
     } catch (err) {
       this.setStatus(500);

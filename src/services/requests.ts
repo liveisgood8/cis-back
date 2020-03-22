@@ -1,13 +1,12 @@
 import Container, { Service } from 'typedi';
 import { Repository, getConnection, DeepPartial } from 'typeorm';
-import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { BusinessRequest } from '../models/request';
 import { User } from '../models/user';
-import { MailService } from './mail';
+import { MailService, IMessageOptions } from './mail';
 
 interface IAnswer {
   email: string;
-  message: string;
+  message: IMessageOptions;
 }
 
 @Service()
@@ -62,7 +61,7 @@ export class BusinessRequestsService {
         isHandled: true,
       });
       transactionEntityManage.save(request);
-      this.mailService.sendEmail(answer.email, answer.message);
+      await this.mailService.sendEmail(answer.email, answer.message);
     });
   }
 

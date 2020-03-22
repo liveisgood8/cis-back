@@ -4,6 +4,9 @@ export const config: IConfig = {
   expressPort: 80,
   staticPath: './public',
   passwordSalt: 'password_salt_very_strong',
+  mail: {
+    from: 'lemeshonok12@yandex.ru',
+  },
   jwt: {
     audience: 'www.cis.com',
     access: {
