@@ -23,7 +23,7 @@ export class User {
   surname?: string;
 
   @Column()
-  imageId: number;
+  imageUrl: string;
 
   @OneToMany((type) => BusinessRequest, (businessRequest) => businessRequest.user)
   requests: BusinessRequest[];

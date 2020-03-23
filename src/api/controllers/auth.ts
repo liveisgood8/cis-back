@@ -13,7 +13,7 @@ interface IRegisterRequestBody {
   password: string;
   name: string;
   surname: string;
-  imageId: number;
+  imageUrl: string;
 }
 
 @Tags('Auth')
@@ -49,7 +49,7 @@ export class AuthController extends Controller {
         requestBody.password,
         requestBody.name,
         requestBody.surname,
-        requestBody.imageId,
+        requestBody.imageUrl,
     );
   }
 }

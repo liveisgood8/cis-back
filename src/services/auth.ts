@@ -16,7 +16,7 @@ export class AuthService {
 
   public async login(login: string, password: string): Promise<ILoginResult> {
     const user = await this.userRepository.createQueryBuilder('user')
-        .select(['user.id', 'user.login', 'user.password', 'user.name'])
+        .select(['user.id', 'user.login', 'user.password', 'user.name', 'user.imageUrl'])
         .where('user.login = :login', {
           login: login,
         })
@@ -52,7 +52,7 @@ export class AuthService {
       password: string,
       name: string,
       surname: string,
-      imageId: number,
+      imageUrl: string,
   ): Promise<void> {
     const user = await this.userRepository.findOne({
       where: {
@@ -67,7 +67,7 @@ export class AuthService {
       password: this.getPasswordHashWithSalt(password),
       name,
       surname,
-      imageId,
+      imageUrl,
     });
   }
 
