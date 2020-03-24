@@ -8,6 +8,13 @@ import { ILoginResult } from '../core/types';
 import { CodeError } from '../utils/error-with-code';
 import { Errors } from '../utils/errors';
 
+
+export function getPasswordHashWithSalt(password: string): string {
+  const saltedPassword = password + config.passwordSalt;
+  const hash = createHash('md5').update(saltedPassword).digest('base64');
+  return hash;
+}
+
 @Service()
 export class AuthService {
   constructor(
@@ -16,7 +23,7 @@ export class AuthService {
 
   public async login(login: string, password: string): Promise<ILoginResult> {
     const user = await this.userRepository.createQueryBuilder('user')
-        .select(['user.id', 'user.login', 'user.password', 'user.name', 'user.imageUrl'])
+        .select(['user.id', 'user.login', 'user.password', 'user.name', 'user.surname', 'user.imageUrl'])
         .where('user.login = :login', {
           login: login,
         })
@@ -26,7 +33,7 @@ export class AuthService {
           406);
     }
 
-    if (this.getPasswordHashWithSalt(password) !== user.password) {
+    if (getPasswordHashWithSalt(password) !== user.password) {
       throw new CodeError(Errors.AUTH_WRONG_PASSWORD,
           406);
     }
@@ -64,16 +71,11 @@ export class AuthService {
     }
     await this.userRepository.insert({
       login,
-      password: this.getPasswordHashWithSalt(password),
+      password: getPasswordHashWithSalt(password),
       name,
       surname,
       imageUrl,
     });
   }
-
-  private getPasswordHashWithSalt(password: string): string {
-    const saltedPassword = password + config.passwordSalt;
-    const hash = createHash('md5').update(saltedPassword).digest('base64');
-    return hash;
-  }
 }
+

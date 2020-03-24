@@ -53,7 +53,6 @@ export class BusinessRequestsController extends Controller {
 
   @Get('/pending-number')
   public async getPendingCount(@Request() req: ExpressRequest): Promise<IGetPendingNumberResponse> {
-    console.log(this.service, this.mailService);
     const pendingNumber = await this.service.getPendingCountForUser((req.user as User).id);
     return {
       pendingNumber: pendingNumber,

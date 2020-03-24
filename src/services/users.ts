@@ -3,6 +3,7 @@ import { User } from '../models/user';
 import { Repository } from 'typeorm';
 import { readdir } from 'fs';
 import { basename, join, resolve as pathResolve } from 'path';
+import { getPasswordHashWithSalt } from './auth';
 
 @Service()
 export class UsersService {
@@ -22,6 +23,16 @@ export class UsersService {
   public async getAll(): Promise<User[]> {
     const users = this.userRepository.find();
     return users;
+  }
+
+  public async update(user: Partial<User>): Promise<User> {
+    if (user.password) {
+      user = {
+        ...user,
+        password: getPasswordHashWithSalt(user.password),
+      };
+    }
+    return this.userRepository.save(user);
   }
 
   public async getProfileImages(): Promise<string[]> {
