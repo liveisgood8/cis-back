@@ -2,7 +2,7 @@ import { Service } from 'typedi';
 import { User } from '../models/user';
 import { Repository } from 'typeorm';
 import { readdir } from 'fs';
-import { basename, join, resolve as pathResolve } from 'path';
+import { basename, resolve as pathResolve } from 'path';
 import { getPasswordHashWithSalt } from './auth';
 
 @Service()
