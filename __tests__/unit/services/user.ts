@@ -5,7 +5,7 @@ import mock from 'mock-fs';
 import { resolve } from 'path';
 import { DirectoryItems } from 'mock-fs/lib/filesystem';
 
-describe('user service testing', () => {
+describe('user service - unit', () => {
   afterEach(mock.restore);
 
   const testUsers: User[] = [

@@ -4,7 +4,7 @@ import { User } from '../../../src/models/user';
 import { CodeError } from '../../../src/utils/error-with-code';
 import { Errors } from '../../../src/utils/errors';
 
-describe('auth service', () => {
+describe('auth service - unit', () => {
   describe('login', () => {
     it('when user not founded', async () => {
       const queryBuilderMock = jest.fn(() => ({

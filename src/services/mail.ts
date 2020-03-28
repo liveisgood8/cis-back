@@ -1,6 +1,5 @@
 import { Service } from 'typedi';
 import { Transporter } from 'nodemailer';
-import { makeTransporter } from '../utils/mail-transport';
 import config from '../config';
 
 export interface IMessageOptions {
@@ -10,14 +9,10 @@ export interface IMessageOptions {
 
 @Service()
 export class MailService {
-  private transporter: Transporter;
-
-  constructor() {
-    this.transporter = makeTransporter();
+  constructor(private transporter: Transporter) {
   }
 
   async sendEmail(to: string, message: IMessageOptions): Promise<void> {
-    console.log('send email:', to, message);
     return this.transporter.sendMail({
       from: config.mail.from,
       to,

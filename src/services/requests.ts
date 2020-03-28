@@ -1,4 +1,4 @@
-import Container, { Service } from 'typedi';
+import { Service } from 'typedi';
 import { Repository, getConnection, DeepPartial } from 'typeorm';
 import { BusinessRequest } from '../models/request';
 import { User } from '../models/user';
@@ -11,12 +11,10 @@ interface IAnswer {
 
 @Service()
 export class BusinessRequestsService {
-  private mailService: MailService;
-
   constructor(
     private requestsRepository: Repository<BusinessRequest>,
+    private mailService: MailService,
   ) {
-    this.mailService = Container.get(MailService);
   }
 
   public async getByIdForUser(id: number, userId: number): Promise<BusinessRequest | undefined> {
@@ -32,12 +30,11 @@ export class BusinessRequestsService {
   }
 
   public async getForUser(userId: number): Promise<BusinessRequest[]> {
-    const user = new User();
-    user.id = userId;
-
     return this.requestsRepository.find({
       where: {
-        user: user,
+        user: {
+          id: userId,
+        },
         isHandled: false,
       },
     });

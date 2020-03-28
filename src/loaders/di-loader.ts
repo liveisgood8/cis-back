@@ -14,6 +14,7 @@ import { UserPermissions } from '../models/permissions';
 import { BusinessRequestsService } from '../services/requests';
 import { BusinessRequest } from '../models/request';
 import { MailService } from '../services/mail';
+import { makeTransporter } from '../utils/mail-transport';
 
 export default (): void => {
   Container.set(AuthService, new AuthService(getRepository(User)));
@@ -22,6 +23,8 @@ export default (): void => {
   Container.set(ContractsService, new ContractsService(getRepository(Contract)));
   Container.set(TasksService, new TasksService(getRepository(Task)));
   Container.set(PermissionsService, new PermissionsService(getRepository(UserPermissions)));
-  Container.set(BusinessRequestsService, new BusinessRequestsService(getRepository(BusinessRequest)));
-  Container.set(MailService, new MailService());
+  Container.set(MailService, new MailService(makeTransporter()));
+  Container.set(BusinessRequestsService, new BusinessRequestsService(
+      getRepository(BusinessRequest),
+      Container.get(MailService)));
 };

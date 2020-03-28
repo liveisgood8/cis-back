@@ -6,4 +6,9 @@ module.exports = {
       tsConfig: 'tsconfig.json',
     },
   },
+  modulePathIgnorePatterns: ['test-utils'],
+  collectCoverageFrom: [
+    'src/**/*.ts',
+    '!src/models/**/*.ts',
+  ],
 };

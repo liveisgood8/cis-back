@@ -1,10 +1,8 @@
 import { Service } from 'typedi';
-import { Repository, QueryFailedError } from 'typeorm';
+import { Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { Contract } from '../models/contract';
 import { Client } from '../models/client';
-import { IError } from '../core/types';
-import { Errors } from '../utils/errors';
 
 @Service()
 export class ContractsService {
@@ -17,12 +15,11 @@ export class ContractsService {
   }
 
   public async getByClientId(id: number): Promise<Contract[]> {
-    const client = new Client();
-    client.id = id;
-
     return this.contractsRepository.find({
       where: {
-        client: client,
+        client: {
+          id,
+        },
       },
     });
   }
