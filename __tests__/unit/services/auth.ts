@@ -104,7 +104,13 @@ describe('auth service - unit', () => {
       });
       const service = new AuthService(mockedRepo as Repository<User>);
       try {
-        await service.register('l', 'p', 'n', 'sn', 'img');
+        await service.register({
+          login: 'l',
+          password: 'p',
+          name: 'n',
+          surname: 'sn',
+          imageUrl: 'img',
+        });
         fail('it should not be reached');
       } catch (err) {
         expect(findOne.mock.calls.length).toBe(1);
@@ -115,7 +121,13 @@ describe('auth service - unit', () => {
     it('correct - user not exist', async () => {
       findOne.mockReturnValueOnce(undefined);
       const service = new AuthService(mockedRepo as Repository<User>);
-      await service.register('l', 'p', 'n', 'sn', 'img');
+      await service.register({
+        login: 'l',
+        password: 'p',
+        name: 'n',
+        surname: 'sn',
+        imageUrl: 'img',
+      });
       expect(findOne.mock.calls.length).toBe(1);
       expect(insert.mock.calls.length).toBe(1);
       expect(insert.mock.calls[0][0]).toStrictEqual({

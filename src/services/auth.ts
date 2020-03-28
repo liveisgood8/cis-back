@@ -19,23 +19,23 @@ export function getPasswordHashWithSalt(password: string): string {
 export class AuthService {
   constructor(
     private userRepository: Repository<User>,
-  ) {}
+  ) { }
 
   public async login(login: string, password: string): Promise<ILoginResult> {
     const user = await this.userRepository.createQueryBuilder('user')
-        .select(['user.id', 'user.login', 'user.password', 'user.name', 'user.surname', 'user.imageUrl'])
-        .where('user.login = :login', {
-          login: login,
-        })
-        .getOne();
+      .select(['user.id', 'user.login', 'user.password', 'user.name', 'user.surname', 'user.imageUrl'])
+      .where('user.login = :login', {
+        login: login,
+      })
+      .getOne();
     if (!user) {
       throw new CodeError(Errors.AUTH_USER_NOT_FOUND,
-          406);
+        406);
     }
 
     if (getPasswordHashWithSalt(password) !== user.password) {
       throw new CodeError(Errors.AUTH_WRONG_PASSWORD,
-          406);
+        406);
     }
     delete user.password;
 
@@ -55,26 +55,20 @@ export class AuthService {
   }
 
   public async register(
-      login: string,
-      password: string,
-      name: string,
-      surname: string,
-      imageUrl: string,
+    user: Pick<User, 'login' | 'password' | 'name' | 'surname' | 'imageUrl'>,
   ): Promise<void> {
-    const user = await this.userRepository.findOne({
+    const userDuplicate = await this.userRepository.findOne({
       where: {
-        login: login,
+        login: user.login,
       },
     });
-    if (user) {
+    if (userDuplicate) {
       throw new CodeError(Errors.REGISTER_USER_IS_EXIST, 406);
     }
+
     await this.userRepository.insert({
-      login,
-      password: getPasswordHashWithSalt(password),
-      name,
-      surname,
-      imageUrl,
+      ...user,
+      password: getPasswordHashWithSalt(user.password),
     });
   }
 }

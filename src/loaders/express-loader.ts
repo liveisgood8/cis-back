@@ -9,12 +9,15 @@ import swaggerConfig from '../../swagger.json';
 import tsoaConfig from '../../tsoa.json';
 import config from '../config';
 import { RegisterRoutes } from '../api/routes';
-import { IError } from '../core/types.js';
-import { Errors } from '../utils/errors.js';
-import { CodeError } from '../utils/error-with-code.js';
+import { CodeError } from '../utils/error-with-code';
+import { Errors } from '../utils/errors';
+import { IError } from '../core/types';
 
-export default (): void => {
-  const app = express();
+/** Just for testing */
+export let app: express.Express;
+
+export default (): express.Express => {
+  app = express();
   const development = process.env.NODE_ENV !== 'production';
 
   app.use(bodyParser.json());
@@ -64,7 +67,5 @@ export default (): void => {
   /* eslint-enable @typescript-eslint/no-unused-vars */
   /* eslint-enable @typescript-eslint/no-explicit-any */
 
-  app.listen(config.expressPort, () => {
-    console.log('express listening on port', config.expressPort);
-  });
+  return app;
 };

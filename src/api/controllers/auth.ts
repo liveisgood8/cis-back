@@ -40,16 +40,10 @@ export class AuthController extends Controller {
   @Response<IError>('400', 'Ошибка при регистрации')
   @Post('/register')
   public async register(
-    @Body() requestBody: IRegisterRequestBody,
+    @Body() user: IRegisterRequestBody,
   ): Promise<void> {
     const authService = Container.get(AuthService);
     this.setStatus(202);
-    return await authService.register(
-        requestBody.login,
-        requestBody.password,
-        requestBody.name,
-        requestBody.surname,
-        requestBody.imageUrl,
-    );
+    return await authService.register(user);
   }
 }
