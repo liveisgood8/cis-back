@@ -1,6 +1,6 @@
-import { UsersService } from '../../src/services/users';
+import { UsersService } from '../../../src/services/users';
 import { Repository } from 'typeorm';
-import { User } from '../../src/models/user';
+import { User } from '../../../src/models/user';
 import mock from 'mock-fs';
 import { resolve } from 'path';
 import { DirectoryItems } from 'mock-fs/lib/filesystem';
@@ -81,7 +81,7 @@ describe('user service testing', () => {
   });
 
   it('get profile images', async () => {
-    const imagesPath = resolve(__dirname, '../../../public/profile-images/');
+    const imagesPath = resolve(__dirname, '../../../../public/profile-images/');
 
     const images = {
       'image1.png': 'content',

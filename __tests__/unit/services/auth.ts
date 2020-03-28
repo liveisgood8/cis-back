@@ -1,8 +1,8 @@
-import { AuthService, getPasswordHashWithSalt } from '../../src/services/auth';
+import { AuthService, getPasswordHashWithSalt } from '../../../src/services/auth';
 import { Repository } from 'typeorm';
-import { User } from '../../src/models/user';
-import { CodeError } from '../../src/utils/error-with-code';
-import { Errors } from '../../src/utils/errors';
+import { User } from '../../../src/models/user';
+import { CodeError } from '../../../src/utils/error-with-code';
+import { Errors } from '../../../src/utils/errors';
 
 describe('auth service', () => {
   describe('login', () => {
