@@ -9,7 +9,7 @@ import { PermissionsService } from '../../services/permissions';
 import { Permissions } from '../../models/permissions';
 import { User } from '../../models/user';
 
-interface   IClientCreateRequestBody {
+interface IClientCreateRequestBody {
   name: string;
   /**
    * @maxLength 128
@@ -44,7 +44,7 @@ export class ClientsController extends Controller {
 
   @Response<number>('201', 'Клиент успешно добавлен')
   @Response<IError>('403', 'Нет прав для добавление нового клиента')
-  @Response<IError>('406', 'Ошибка добавление нового клиента в базу')
+  @Response<IError>('500', 'Ошибка добавление нового клиента в базу')
   @Post()
   public async insert(
     @Body() requestBody: IClientCreateRequestBody,
@@ -62,8 +62,8 @@ export class ClientsController extends Controller {
     } catch (err) {
       this.setStatus(406);
       throw new CodeError(Errors.INSERT_ENTITY_ERROR,
-          406,
-          err.message);
+        406,
+        err.message);
     }
   }
 }

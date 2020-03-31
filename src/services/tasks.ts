@@ -9,6 +9,12 @@ export class TasksService {
     private tasksRepository: Repository<Task>,
   ) {}
 
+  public async getById(id: number): Promise<Task> {
+    return this.tasksRepository.findOne(id, {
+      relations: ['contract', 'contract.client'],
+    });
+  }
+
   public async getAll(): Promise<Task[]> {
     return this.tasksRepository.find();
   }

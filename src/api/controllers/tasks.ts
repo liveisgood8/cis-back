@@ -36,10 +36,17 @@ export class TasksController extends Controller {
    * @isInt contractId Contract id must be an integer
    */
   @Get()
-  public async getAll(@Query('contractId') contractId?: number): Promise<Task[]> {
-    return contractId ?
-      this.service.getByContractId(contractId) :
-      this.service.getAll();
+  public async getAll(
+    @Query('id') taskId?: number,
+    @Query('contractId') contractId?: number,
+  ): Promise<Task[] | Task> {
+    if (taskId) {
+      return this.service.getById(taskId);
+    } else if (contractId) {
+      return this.service.getByContractId(contractId);
+    } else {
+      return this.service.getAll();
+    }
   }
 
   @Response<number>('201', 'Задача успешно добавлен')
@@ -64,8 +71,8 @@ export class TasksController extends Controller {
     } catch (err) {
       this.setStatus(406);
       throw new CodeError(Errors.INSERT_ENTITY_ERROR,
-          406,
-          err.message);
+        406,
+        err.message);
     }
   }
 }

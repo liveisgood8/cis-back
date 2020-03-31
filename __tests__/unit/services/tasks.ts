@@ -55,6 +55,15 @@ describe('tasks service - unit', () => {
   });
 
   it('get by id', async () => {
+    repoMock.mocks.findOne.mockReturnValue(realTasks[0]);
+
+    const entity = await service.getById(4353);
+    expect(repoMock.mocks.findOne.mock.calls.length).toBe(1);
+    expect(repoMock.mocks.findOne.mock.calls[0][0]).toBe(4353);
+    expect(entity).toStrictEqual(realTasks[0]);
+  });
+
+  it('get by contract id', async () => {
     repoMock.mocks.find.mockReturnValue(realTasks[0]);
 
     const entity = await service.getByContractId(4353);

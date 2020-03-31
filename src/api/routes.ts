@@ -294,7 +294,7 @@ export function RegisterRoutes(app: express.Express) {
     app.post('/api/v1/auth/register',
         function(request: any, response: any, next: any) {
             const args = {
-                requestBody: { "in": "body", "name": "requestBody", "required": true, "ref": "IRegisterRequestBody" },
+                user: { "in": "body", "name": "user", "required": true, "ref": "IRegisterRequestBody" },
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -550,6 +550,7 @@ export function RegisterRoutes(app: express.Express) {
         authenticateMiddleware([{ "JWT": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
+                taskId: { "in": "query", "name": "id", "dataType": "double" },
                 contractId: { "in": "query", "name": "contractId", "dataType": "integer", "validators": { "isInt": { "errorMsg": "Contract id must be an integer" } } },
             };
 
