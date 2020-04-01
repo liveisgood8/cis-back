@@ -1,4 +1,4 @@
-import { Controller, Post, Route, Response, Body, Tags, SuccessResponse } from 'tsoa';
+import { Controller, Post, Route, Response, Body, Tags } from 'tsoa';
 import Container from 'typedi';
 import { AuthService } from '../../services/auth';
 import { ILoginResult, IError } from '../../core/types';
@@ -19,8 +19,8 @@ interface IRegisterRequestBody {
 @Tags('Auth')
 @Route('/auth')
 export class AuthController extends Controller {
-  @Response<ILoginResult>('202', 'Аутентификация успешна')
-  @Response<IError>('400', 'Ошибка при аутентификации')
+  @Response<IError>('406', 'Неверный пароль или логин')
+  @Response<IError>('500', 'Ошибка сервера')
   @Post('/login')
   public async login(
     @Body() requestBody: ILoginRequestBody,
@@ -30,14 +30,13 @@ export class AuthController extends Controller {
     return await authService.login(requestBody.login, requestBody.password);
   }
 
-  @Post('/logout')
-  public async logout(): Promise<void> {
-    // TODO
-  }
+  // TODO
+  // @Post('/logout')
+  // public async logout(): Promise<void> {
+  // }
 
-  @SuccessResponse('202')
-  @Response<ILoginResult>('202', 'Аутентификация успешна')
-  @Response<IError>('400', 'Ошибка при регистрации')
+  @Response<IError>('406', 'Пользователь уже существует')
+  @Response<IError>('500', 'Ошибка сервера')
   @Post('/register')
   public async register(
     @Body() user: IRegisterRequestBody,

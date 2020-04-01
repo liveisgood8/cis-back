@@ -25,13 +25,18 @@
 					"type": "string",
 					"x-nullable": true
 				},
-				"imageId": {
-					"type": "number",
-					"format": "double"
+				"imageUrl": {
+					"type": "string"
 				},
 				"requests": {
 					"items": {
 						"$ref": "#/definitions/BusinessRequest"
+					},
+					"type": "array"
+				},
+				"permissions": {
+					"items": {
+						"$ref": "#/definitions/UserPermissions"
 					},
 					"type": "array"
 				},
@@ -44,8 +49,9 @@
 			"required": [
 				"id",
 				"login",
-				"imageId",
-				"requests"
+				"imageUrl",
+				"requests",
+				"permissions"
 			],
 			"type": "object",
 			"additionalProperties": false
@@ -190,6 +196,9 @@
 					"type": "integer",
 					"format": "int32"
 				},
+				"title": {
+					"type": "string"
+				},
 				"message": {
 					"type": "string"
 				},
@@ -210,10 +219,33 @@
 			},
 			"required": [
 				"id",
+				"title",
 				"message",
 				"isHandled",
 				"user",
 				"contract"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"UserPermissions": {
+			"properties": {
+				"id": {
+					"type": "number",
+					"format": "double"
+				},
+				"user": {
+					"$ref": "#/definitions/User"
+				},
+				"permissionId": {
+					"type": "number",
+					"format": "double"
+				}
+			},
+			"required": [
+				"id",
+				"user",
+				"permissionId"
 			],
 			"type": "object",
 			"additionalProperties": false
@@ -245,7 +277,13 @@
 				3,
 				4,
 				5,
-				6
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12
 			],
 			"type": "integer"
 		},
@@ -288,11 +326,23 @@
 				},
 				"password": {
 					"type": "string"
+				},
+				"name": {
+					"type": "string"
+				},
+				"surname": {
+					"type": "string"
+				},
+				"imageUrl": {
+					"type": "string"
 				}
 			},
 			"required": [
 				"login",
-				"password"
+				"password",
+				"name",
+				"surname",
+				"imageUrl"
 			],
 			"type": "object",
 			"additionalProperties": false
@@ -335,6 +385,9 @@
 					"type": "string",
 					"format": "date-time"
 				},
+				"copyPath": {
+					"type": "string"
+				},
 				"comment": {
 					"type": "string",
 					"x-nullable": true
@@ -343,7 +396,42 @@
 			"required": [
 				"clientId",
 				"name",
-				"conclusionDate"
+				"conclusionDate",
+				"copyPath"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"ICopyUploadResponse": {
+			"properties": {
+				"contentPath": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"contentPath"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"Permissions": {
+			"enum": [
+				1,
+				2,
+				3,
+				4
+			],
+			"type": "integer"
+		},
+		"IGetPendingNumberResponse": {
+			"properties": {
+				"pendingNumber": {
+					"type": "integer",
+					"format": "int32"
+				}
+			},
+			"required": [
+				"pendingNumber"
 			],
 			"type": "object",
 			"additionalProperties": false
@@ -358,7 +446,19 @@
 					"type": "string"
 				},
 				"answer": {
-					"type": "string"
+					"properties": {
+						"subject": {
+							"type": "string"
+						},
+						"body": {
+							"type": "string"
+						}
+					},
+					"required": [
+						"body",
+						"subject"
+					],
+					"type": "object"
 				}
 			},
 			"required": [
@@ -379,6 +479,9 @@
 					"type": "integer",
 					"format": "int32"
 				},
+				"title": {
+					"type": "string"
+				},
 				"message": {
 					"type": "string"
 				}
@@ -386,6 +489,7 @@
 			"required": [
 				"userId",
 				"contractId",
+				"title",
 				"message"
 			],
 			"type": "object",
@@ -416,6 +520,35 @@
 			],
 			"type": "object",
 			"additionalProperties": false
+		},
+		"IUserUpdateBody": {
+			"properties": {
+				"id": {
+					"type": "number",
+					"format": "double"
+				},
+				"password": {
+					"type": "string",
+					"x-nullable": true
+				},
+				"name": {
+					"type": "string"
+				},
+				"surname": {
+					"type": "string"
+				},
+				"imageUrl": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"id",
+				"name",
+				"surname",
+				"imageUrl"
+			],
+			"type": "object",
+			"additionalProperties": false
 		}
 	},
 	"info": {
@@ -437,17 +570,17 @@
 					"200": {
 						"description": "Ok",
 						"schema": {
-							"type": "object"
-						}
-					},
-					"202": {
-						"description": "Аутентификация успешна",
-						"schema": {
 							"$ref": "#/definitions/ILoginResult"
 						}
 					},
-					"400": {
-						"description": "Ошибка при аутентификации",
+					"406": {
+						"description": "Неверный пароль или логин",
+						"schema": {
+							"$ref": "#/definitions/IError"
+						}
+					},
+					"500": {
+						"description": "Ошибка сервера",
 						"schema": {
 							"$ref": "#/definitions/IError"
 						}
@@ -469,24 +602,6 @@
 				]
 			}
 		},
-		"/auth/logout": {
-			"post": {
-				"operationId": "Logout",
-				"produces": [
-					"application/json"
-				],
-				"responses": {
-					"204": {
-						"description": "No content"
-					}
-				},
-				"tags": [
-					"Auth"
-				],
-				"security": [],
-				"parameters": []
-			}
-		},
 		"/auth/register": {
 			"post": {
 				"operationId": "Register",
@@ -494,14 +609,17 @@
 					"application/json"
 				],
 				"responses": {
-					"200": {
-						"description": "Ok",
+					"204": {
+						"description": "No content"
+					},
+					"406": {
+						"description": "Пользователь уже существует",
 						"schema": {
-							"type": "object"
+							"$ref": "#/definitions/IError"
 						}
 					},
-					"400": {
-						"description": "Ошибка при регистрации",
+					"500": {
+						"description": "Ошибка сервера",
 						"schema": {
 							"$ref": "#/definitions/IError"
 						}
@@ -514,7 +632,7 @@
 				"parameters": [
 					{
 						"in": "body",
-						"name": "requestBody",
+						"name": "user",
 						"required": true,
 						"schema": {
 							"$ref": "#/definitions/IRegisterRequestBody"
@@ -525,7 +643,7 @@
 		},
 		"/clients": {
 			"get": {
-				"operationId": "GetByIdOrAll",
+				"operationId": "GetAll",
 				"produces": [
 					"application/json"
 				],
@@ -533,7 +651,16 @@
 					"200": {
 						"description": "Ok",
 						"schema": {
-							"type": "object"
+							"items": {
+								"$ref": "#/definitions/Client"
+							},
+							"type": "array"
+						}
+					},
+					"500": {
+						"description": "Ошибка сервера",
+						"schema": {
+							"$ref": "#/definitions/IError"
 						}
 					}
 				},
@@ -545,15 +672,7 @@
 						"JWT": []
 					}
 				],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "id",
-						"required": false,
-						"format": "int32",
-						"type": "integer"
-					}
-				]
+				"parameters": []
 			},
 			"post": {
 				"operationId": "Insert",
@@ -564,17 +683,17 @@
 					"200": {
 						"description": "Ok",
 						"schema": {
-							"type": "object"
-						}
-					},
-					"201": {
-						"description": "Клиент успешно добавлен",
-						"schema": {
 							"type": "number",
 							"format": "double"
 						}
 					},
-					"406": {
+					"403": {
+						"description": "Нет прав для добавление нового клиента",
+						"schema": {
+							"$ref": "#/definitions/IError"
+						}
+					},
+					"500": {
 						"description": "Ошибка добавление нового клиента в базу",
 						"schema": {
 							"$ref": "#/definitions/IError"
@@ -601,6 +720,45 @@
 				]
 			}
 		},
+		"/clients/{id}": {
+			"get": {
+				"operationId": "GetById",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/Client"
+						}
+					},
+					"500": {
+						"description": "Ошибка сервера",
+						"schema": {
+							"$ref": "#/definitions/IError"
+						}
+					}
+				},
+				"tags": [
+					"Clients"
+				],
+				"security": [
+					{
+						"JWT": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"format": "int32",
+						"type": "integer"
+					}
+				]
+			}
+		},
 		"/contracts": {
 			"get": {
 				"operationId": "GetByClientIdOrAll",
@@ -615,6 +773,12 @@
 								"$ref": "#/definitions/Contract"
 							},
 							"type": "array"
+						}
+					},
+					"500": {
+						"description": "Ошибка получение списка договоров",
+						"schema": {
+							"$ref": "#/definitions/IError"
 						}
 					}
 				},
@@ -645,17 +809,17 @@
 					"200": {
 						"description": "Ok",
 						"schema": {
-							"type": "object"
-						}
-					},
-					"201": {
-						"description": "Клиент успешно добавлен",
-						"schema": {
 							"type": "number",
 							"format": "double"
 						}
 					},
-					"406": {
+					"403": {
+						"description": "Нет прав для добавление нового договора",
+						"schema": {
+							"$ref": "#/definitions/IError"
+						}
+					},
+					"500": {
 						"description": "Ошибка добавление нового договора в базу",
 						"schema": {
 							"$ref": "#/definitions/IError"
@@ -682,7 +846,72 @@
 				]
 			}
 		},
-		"/business-requests/pending-count": {
+		"/contracts/uploadCopyFile": {
+			"post": {
+				"operationId": "UploadContractCopy",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/ICopyUploadResponse"
+						}
+					},
+					"500": {
+						"description": "Ошибка загрузки договора на сервер",
+						"schema": {
+							"$ref": "#/definitions/IError"
+						}
+					}
+				},
+				"tags": [
+					"Contracts"
+				],
+				"security": [
+					{
+						"JWT": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/permissions": {
+			"get": {
+				"operationId": "GetAll",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"items": {
+								"$ref": "#/definitions/Permissions"
+							},
+							"type": "array"
+						}
+					},
+					"500": {
+						"description": "Ошибка получения прав из базы",
+						"schema": {
+							"$ref": "#/definitions/IError"
+						}
+					}
+				},
+				"tags": [
+					"Permissions"
+				],
+				"security": [
+					{
+						"JWT": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/business-requests/pending-number": {
 			"get": {
 				"operationId": "GetPendingCount",
 				"produces": [
@@ -692,8 +921,7 @@
 					"200": {
 						"description": "Ok",
 						"schema": {
-							"type": "number",
-							"format": "double"
+							"$ref": "#/definitions/IGetPendingNumberResponse"
 						}
 					}
 				},
@@ -723,6 +951,12 @@
 							},
 							"type": "array"
 						}
+					},
+					"500": {
+						"description": "Ошибка получение информации о обращении",
+						"schema": {
+							"$ref": "#/definitions/IError"
+						}
 					}
 				},
 				"tags": [
@@ -734,27 +968,15 @@
 					}
 				],
 				"parameters": []
-			}
-		},
-		"/business-requests/set-handled": {
+			},
 			"patch": {
 				"operationId": "SetHandled",
 				"produces": [
 					"application/json"
 				],
 				"responses": {
-					"200": {
-						"description": "Ok",
-						"schema": {
-							"type": "object"
-						}
-					},
-					"201": {
-						"description": "Обращение успешно обработано",
-						"schema": {
-							"type": "number",
-							"format": "double"
-						}
+					"204": {
+						"description": "No content"
 					},
 					"500": {
 						"description": "Ошибка обработки обращения",
@@ -781,11 +1003,9 @@
 						}
 					}
 				]
-			}
-		},
-		"/business-requests/insert": {
+			},
 			"post": {
-				"operationId": "InsertContract",
+				"operationId": "Insert",
 				"produces": [
 					"application/json"
 				],
@@ -793,17 +1013,10 @@
 					"200": {
 						"description": "Ok",
 						"schema": {
-							"type": "object"
+							"$ref": "#/definitions/BusinessRequest"
 						}
 					},
-					"201": {
-						"description": "Обращение успешно добавлено",
-						"schema": {
-							"type": "number",
-							"format": "double"
-						}
-					},
-					"406": {
+					"500": {
 						"description": "Ошибка добавление нового обращения в базу",
 						"schema": {
 							"$ref": "#/definitions/IError"
@@ -830,6 +1043,45 @@
 				]
 			}
 		},
+		"/business-requests/{id}": {
+			"get": {
+				"operationId": "GetById",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/BusinessRequest"
+						}
+					},
+					"500": {
+						"description": "Ошибка получение информации о обращении",
+						"schema": {
+							"$ref": "#/definitions/IError"
+						}
+					}
+				},
+				"tags": [
+					"BusinessRequests"
+				],
+				"security": [
+					{
+						"JWT": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"format": "int32",
+						"type": "integer"
+					}
+				]
+			}
+		},
 		"/tasks": {
 			"get": {
 				"operationId": "GetAll",
@@ -844,6 +1096,12 @@
 								"$ref": "#/definitions/Task"
 							},
 							"type": "array"
+						}
+					},
+					"500": {
+						"description": "Ошибка получения задач из базы",
+						"schema": {
+							"$ref": "#/definitions/IError"
 						}
 					}
 				},
@@ -874,17 +1132,17 @@
 					"200": {
 						"description": "Ok",
 						"schema": {
-							"type": "object"
-						}
-					},
-					"201": {
-						"description": "Задача успешно добавлен",
-						"schema": {
 							"type": "number",
 							"format": "double"
 						}
 					},
-					"406": {
+					"403": {
+						"description": "Нет прав для добавление новой задачи",
+						"schema": {
+							"$ref": "#/definitions/IError"
+						}
+					},
+					"500": {
 						"description": "Ошибка добавление новой задачи в базу",
 						"schema": {
 							"$ref": "#/definitions/IError"
@@ -911,6 +1169,45 @@
 				]
 			}
 		},
+		"/tasks/{id}": {
+			"get": {
+				"operationId": "GetById",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/Task"
+						}
+					},
+					"500": {
+						"description": "Ошибка получения задачи из базы",
+						"schema": {
+							"$ref": "#/definitions/IError"
+						}
+					}
+				},
+				"tags": [
+					"Tasks"
+				],
+				"security": [
+					{
+						"JWT": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"format": "double",
+						"type": "number"
+					}
+				]
+			}
+		},
 		"/users": {
 			"get": {
 				"operationId": "GetAll",
@@ -925,6 +1222,77 @@
 								"$ref": "#/definitions/User"
 							},
 							"type": "array"
+						}
+					},
+					"500": {
+						"description": "Ошибка получение информации о пользователях",
+						"schema": {
+							"$ref": "#/definitions/IError"
+						}
+					}
+				},
+				"tags": [
+					"Users"
+				],
+				"security": [],
+				"parameters": []
+			},
+			"patch": {
+				"operationId": "Update",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"204": {
+						"description": "No content"
+					},
+					"500": {
+						"description": "Ошибка обновлении информации о пользователях",
+						"schema": {
+							"$ref": "#/definitions/IError"
+						}
+					}
+				},
+				"tags": [
+					"Users"
+				],
+				"security": [
+					{
+						"JWT": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "user",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/IUserUpdateBody"
+						}
+					}
+				]
+			}
+		},
+		"/users/profile-images": {
+			"get": {
+				"operationId": "GetProfileImages",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"items": {
+								"type": "string"
+							},
+							"type": "array"
+						}
+					},
+					"500": {
+						"description": "Ошибка получения списка изображений пользователей",
+						"schema": {
+							"$ref": "#/definitions/IError"
 						}
 					}
 				},
@@ -977,6 +1345,10 @@
 		{
 			"name": "Users",
 			"description": "Operations about auth"
+		},
+		{
+			"name": "Permissions",
+			"description": "Operations about user permissions"
 		}
 	],
 	"schemes": [

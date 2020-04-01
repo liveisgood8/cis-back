@@ -32,34 +32,37 @@ export class TasksController extends Controller {
     this.permissionService = Container.get(PermissionsService);
   }
 
-  /**
-   * @isInt contractId Contract id must be an integer
-   */
+  /** @isInt contractId Contract id must be an integer */
+  @Response<IError>('500', 'Ошибка получения задач из базы')
   @Get()
   public async getAll(
-    @Query('id') taskId?: number,
     @Query('contractId') contractId?: number,
-  ): Promise<Task[] | Task> {
-    if (taskId) {
-      return this.service.getById(taskId);
-    } else if (contractId) {
+  ): Promise<Task[]> {
+    if (contractId) {
       return this.service.getByContractId(contractId);
     } else {
       return this.service.getAll();
     }
   }
 
-  @Response<number>('201', 'Задача успешно добавлен')
+  /** @isInt taskId Contract id must be an integer */
+  @Response<IError>('500', 'Ошибка получения задачи из базы')
+  @Get('{id}')
+  public async getById(
+    id: number,
+  ): Promise<Task> {
+    return this.service.getById(id);
+  }
+
   @Response<IError>('403', 'Нет прав для добавление новой задачи')
-  @Response<IError>('406', 'Ошибка добавление новой задачи в базу')
+  @Response<IError>('500', 'Ошибка добавление новой задачи в базу')
   @Post()
   public async insert(
     @Request() req: Express.Request,
     @Body() requestBody: ITaskCreateRequestBody,
-  ): Promise<number | IError> {
+  ): Promise<number> {
     await this.permissionService.mustHavePermission((req.user as User).id, Permissions.ADD_TASKS);
     try {
-      this.setStatus(201);
       return this.service.insert({
         contract: {
           id: requestBody.contractId,
@@ -69,9 +72,8 @@ export class TasksController extends Controller {
         doneTo: requestBody.doneTo,
       });
     } catch (err) {
-      this.setStatus(406);
       throw new CodeError(Errors.INSERT_ENTITY_ERROR,
-        406,
+        500,
         err.message);
     }
   }

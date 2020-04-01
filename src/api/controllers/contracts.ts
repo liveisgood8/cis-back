@@ -44,6 +44,7 @@ export class ContractsController extends Controller {
   /**
    * @isInt clientId Client id must be an integer
    */
+  @Response<IError>('500', 'Ошибка получение списка договоров')
   @Get()
   public async getByClientIdOrAll(@Query('clientId') clientId?: number): Promise<Contract[]> {
     return clientId ?
@@ -51,17 +52,15 @@ export class ContractsController extends Controller {
       this.service.getAll();
   }
 
-  @Response<number>('201', 'Клиент успешно добавлен')
   @Response<IError>('403', 'Нет прав для добавление нового договора')
-  @Response<IError>('406', 'Ошибка добавление нового договора в базу')
+  @Response<IError>('500', 'Ошибка добавление нового договора в базу')
   @Post()
   public async insertContract(
     @Request() req: Express.Request,
     @Body() requestBody: IContractCreateRequestBody,
-  ): Promise<number | IError> {
+  ): Promise<number> {
     await this.permissionService.mustHavePermission((req.user as User).id, Permissions.ADD_CONTRACTS);
     try {
-      this.setStatus(201);
       return await this.service.insert({
         name: requestBody.name,
         conclusionDate: requestBody.conclusionDate,
@@ -72,28 +71,24 @@ export class ContractsController extends Controller {
         },
       });
     } catch (err) {
-      this.setStatus(406);
       throw new CodeError(Errors.INSERT_ENTITY_ERROR,
-          406,
-          err.message);
+        500,
+        err.message);
     }
   }
 
-  @SuccessResponse('201', 'Договор успешно загружен')
-  @Response<ICopyUploadResponse>('201')
-  @Response<IError>('406', 'Ошибка загрузки договора на сервер')
+  @Response<IError>('500', 'Ошибка загрузки договора на сервер')
   @Post('/uploadCopyFile')
-  public async uploadContractCopy(@Request() requestBody: express.Request): Promise<ICopyUploadResponse | IError> {
+  public async uploadContractCopy(@Request() requestBody: express.Request): Promise<ICopyUploadResponse> {
     try {
       const file = await this.handleContractCopyFile(requestBody);
       return {
         contentPath: file.path.replace(`public${sep}`, ''),
       };
     } catch (err) {
-      return {
-        code: Errors.FILE_UPLOAD_ERROR,
-        message: err.message,
-      };
+      throw new CodeError(Errors.FILE_UPLOAD_ERROR,
+        500,
+        err.message);
     }
   }
 

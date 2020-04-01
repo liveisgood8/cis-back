@@ -5,7 +5,7 @@ import { Errors } from '../../utils/errors';
 import { CodeError } from '../../utils/error-with-code';
 import { BusinessRequest } from '../../models/request';
 import { BusinessRequestsService } from '../../services/requests';
-import { Request as ExpressRequest} from 'express';
+import { Request as ExpressRequest } from 'express';
 import { User } from '../../models/user';
 import { MailService } from '../../services/mail';
 
@@ -35,6 +35,7 @@ interface ISetHandledBody {
 }
 
 interface IGetPendingNumberResponse {
+  /** @isInt integer */
   pendingNumber: number;
 }
 
@@ -59,26 +60,28 @@ export class BusinessRequestsController extends Controller {
     };
   }
 
-
-  /** @isInt id Request id must be a number */
+  @Response<IError>('500', 'Ошибка получение информации о обращении')
   @Get()
-  public async getByIdOrAll(
+  public async getAll(
     @Request() req: ExpressRequest,
-    @Query('id') id?: number,
-  ): Promise<BusinessRequest[] | BusinessRequest> {
-    if (id) {
-      return this.service.getByIdForUser(id, (req.user as User).id);
-    } else {
-      return this.service.getForUser((req.user as User).id);
-    }
+  ): Promise<BusinessRequest[]> {
+    return this.service.getForUser((req.user as User).id);
   }
 
-  @Response<number>('201', 'Обращение успешно обработано')
+  /** @isInt id Request id must be a number */
+  @Response<IError>('500', 'Ошибка получение информации о обращении')
+  @Get('{id}')
+  public async getById(
+    id: number,
+    @Request() req: ExpressRequest,
+  ): Promise<BusinessRequest> {
+    return this.service.getByIdForUser(id, (req.user as User).id);
+  }
+
   @Response<IError>('500', 'Ошибка обработки обращения')
   @Patch()
-  public async setHandled(@Body() requestBody: ISetHandledBody): Promise<void | IError> {
+  public async setHandled(@Body() requestBody: ISetHandledBody): Promise<void> {
     try {
-      this.setStatus(201);
       await this.service.handle(requestBody.requestId, {
         email: requestBody.email,
         message: {
@@ -87,19 +90,16 @@ export class BusinessRequestsController extends Controller {
         },
       });
     } catch (err) {
-      this.setStatus(500);
       throw new CodeError(Errors.UPDATE_ENTITY_ERROR,
-          406,
-          err.message);
+        500,
+        err.message);
     }
   }
 
-  @Response<number>('201', 'Обращение успешно добавлено')
-  @Response<IError>('406', 'Ошибка добавление нового обращения в базу')
+  @Response<IError>('500', 'Ошибка добавление нового обращения в базу')
   @Post()
-  public async insert(@Body() requestBody: IRequestCreateBody): Promise<BusinessRequest | IError> {
+  public async insert(@Body() requestBody: IRequestCreateBody): Promise<BusinessRequest> {
     try {
-      this.setStatus(201);
       return await this.service.save({
         contract: {
           id: requestBody.contractId,
@@ -112,10 +112,9 @@ export class BusinessRequestsController extends Controller {
         message: requestBody.message,
       });
     } catch (err) {
-      this.setStatus(406);
       throw new CodeError(Errors.INSERT_ENTITY_ERROR,
-          406,
-          err.message);
+        500,
+        err.message);
     }
   }
 }

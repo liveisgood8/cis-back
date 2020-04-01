@@ -1,4 +1,4 @@
-import { Controller, Route, Get, Tags, Query, Body, Post, Response, Security, Request } from 'tsoa';
+import { Controller, Route, Get, Tags, Query, Body, Post, Response, Security, Request, SuccessResponse } from 'tsoa';
 import Container from 'typedi';
 import { Client } from '../../models/client';
 import { ClientsService } from '../../services/clients';
@@ -32,27 +32,28 @@ export class ClientsController extends Controller {
     this.permissionService = Container.get(PermissionsService);
   }
 
-  /**
-   * @isInt id Id must be an integer
-   */
+  @Response<IError>('500', 'Ошибка сервера')
   @Get()
-  public async getByIdOrAll(@Query('id') id?: number): Promise<Client[] | Client | IError> {
-    return id ?
-      this.service.getById(id) :
-      this.service.getAll();
+  public async getAll(): Promise<Client[]> {
+    return this.service.getAll();
   }
 
-  @Response<number>('201', 'Клиент успешно добавлен')
+  /** @isInt id Id must be an integer */
+  @Response<IError>('500', 'Ошибка сервера')
+  @Get('{id}')
+  public async getById(id: number): Promise<Client> {
+    return this.service.getById(id);
+  }
+
   @Response<IError>('403', 'Нет прав для добавление нового клиента')
   @Response<IError>('500', 'Ошибка добавление нового клиента в базу')
   @Post()
   public async insert(
     @Body() requestBody: IClientCreateRequestBody,
     @Request() req: Express.Request,
-  ): Promise<number | IError> {
+  ): Promise<number> {
     await this.permissionService.mustHavePermission((req.user as User).id, Permissions.ADD_CLIENTS);
     try {
-      this.setStatus(201);
       return await this.service.insert({
         name: requestBody.name,
         email: requestBody.email,
@@ -60,7 +61,6 @@ export class ClientsController extends Controller {
         comment: requestBody.comment,
       });
     } catch (err) {
-      this.setStatus(406);
       throw new CodeError(Errors.INSERT_ENTITY_ERROR,
         406,
         err.message);

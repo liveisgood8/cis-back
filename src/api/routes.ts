@@ -317,7 +317,6 @@ export function RegisterRoutes(app: express.Express) {
         authenticateMiddleware([{ "JWT": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
-                id: { "in": "query", "name": "id", "dataType": "integer", "validators": { "isInt": { "errorMsg": "Id must be an integer" } } },
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -332,7 +331,30 @@ export function RegisterRoutes(app: express.Express) {
             const controller = new ClientsController();
 
 
-            const promise = controller.getByIdOrAll.apply(controller, validatedArgs as any);
+            const promise = controller.getAll.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    app.get('/api/v1/clients/:id',
+        authenticateMiddleware([{ "JWT": [] }]),
+        function(request: any, response: any, next: any) {
+            const args = {
+                id: { "in": "path", "name": "id", "required": true, "dataType": "double" },
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new ClientsController();
+
+
+            const promise = controller.getById.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -481,7 +503,6 @@ export function RegisterRoutes(app: express.Express) {
         function(request: any, response: any, next: any) {
             const args = {
                 req: { "in": "request", "name": "req", "required": true, "dataType": "object" },
-                id: { "in": "query", "name": "id", "dataType": "integer", "validators": { "isInt": { "errorMsg": "Request id must be a number" } } },
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -496,7 +517,31 @@ export function RegisterRoutes(app: express.Express) {
             const controller = new BusinessRequestsController();
 
 
-            const promise = controller.getByIdOrAll.apply(controller, validatedArgs as any);
+            const promise = controller.getAll.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    app.get('/api/v1/business-requests/:id',
+        authenticateMiddleware([{ "JWT": [] }]),
+        function(request: any, response: any, next: any) {
+            const args = {
+                id: { "in": "path", "name": "id", "required": true, "dataType": "integer", "validators": { "isInt": { "errorMsg": "Request id must be a number" } } },
+                req: { "in": "request", "name": "req", "required": true, "dataType": "object" },
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new BusinessRequestsController();
+
+
+            const promise = controller.getById.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -550,7 +595,6 @@ export function RegisterRoutes(app: express.Express) {
         authenticateMiddleware([{ "JWT": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
-                taskId: { "in": "query", "name": "id", "dataType": "double" },
                 contractId: { "in": "query", "name": "contractId", "dataType": "integer", "validators": { "isInt": { "errorMsg": "Contract id must be an integer" } } },
             };
 
@@ -567,6 +611,29 @@ export function RegisterRoutes(app: express.Express) {
 
 
             const promise = controller.getAll.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    app.get('/api/v1/tasks/:id',
+        authenticateMiddleware([{ "JWT": [] }]),
+        function(request: any, response: any, next: any) {
+            const args = {
+                id: { "in": "path", "name": "id", "required": true, "dataType": "double" },
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new TasksController();
+
+
+            const promise = controller.getById.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
