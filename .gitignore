@@ -107,3 +107,5 @@ dist
 database/
 
 mail.json
+
+public/uploads

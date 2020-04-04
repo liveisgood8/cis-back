@@ -9,7 +9,11 @@ module.exports = {
   modulePathIgnorePatterns: ['test-utils'],
   collectCoverageFrom: [
     'src/**/*.ts',
+    '!src/app.ts',
     '!src/models/**/*.ts',
+    '!src/api/routes.ts',
+    '!src/config/**.ts',
+    '!src/api/middlewares/jwt-auth-tsoa.ts',
     '!src/loaders/**/*.ts',
   ],
 };

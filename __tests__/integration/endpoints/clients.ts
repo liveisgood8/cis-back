@@ -3,10 +3,10 @@ import { testLoader } from '../../test-utils/loaders';
 import { api } from '../../test-utils/api-path-generator';
 import Container from 'typedi';
 import { ClientsService } from '../../../src/services/clients';
-import { reloadDatabase } from '../../test-utils/database';
+import { reloadDatabase, closeConnection } from '../../test-utils/database';
 import { Client } from '../../../src/models/client';
-import { PermissionsService } from '../../../src/services/permissions';
 import { addTestSuperUser, getTestToken } from '../../test-utils/auth';
+import { getConnection } from 'typeorm';
 
 describe('clients endpoint test', () => {
   const realClients: Partial<Client>[] = [
@@ -33,17 +33,22 @@ describe('clients endpoint test', () => {
     const app = await testLoader();
     request = supertest(app);
     done();
-  }, 10000);
+  }, 20000);
+
+  afterAll(async (done) => {
+    await closeConnection();
+    done();
+  });
 
   beforeEach(async (done) => {
     await reloadDatabase();
     done();
   });
 
-  it('get all without auth', async () => {
+  it('get all without auth', (done) => {
     request.get(api('/clients'))
-      .expect(401)
-      .expect('Content-Type', /json/);
+      .expect('Content-Type', /json/)
+      .expect(401, done);
   });
 
   it('get all', async () => {
@@ -71,16 +76,13 @@ describe('clients endpoint test', () => {
 
   it('get by id', async () => {
     const service = Container.get(ClientsService);
-    realClients.forEach((e) => {
-      service.insert(e);
+    realClients.forEach(async (e) => {
+      await service.insert(e);
     });
 
-    const res = await request.get(api('/clients'))
+    const res = await request.get(api('/clients/2'))
       .auth(getTestToken(), {
         type: 'bearer',
-      })
-      .query({
-        id: 2,
       })
       .expect(200)
       .expect('Content-Type', /json/);
@@ -100,7 +102,7 @@ describe('clients endpoint test', () => {
         type: 'bearer',
       })
       .send(realClients[0])
-      .expect(201)
+      .expect(200)
       .expect('Content-Type', /json/);
 
     const clientId: number = res.body;

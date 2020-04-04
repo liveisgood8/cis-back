@@ -29,8 +29,8 @@ export class TasksService {
     });
   }
 
-  public async insert(client: QueryDeepPartialEntity<Task>): Promise<number> {
-    const result = await this.tasksRepository.insert(client);
+  public async insert(task: QueryDeepPartialEntity<Task>): Promise<number> {
+    const result = await this.tasksRepository.insert(task);
     return result.identifiers[0].id;
   }
 }

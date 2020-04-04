@@ -2,7 +2,6 @@ import { Service } from 'typedi';
 import { Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { Contract } from '../models/contract';
-import { Client } from '../models/client';
 
 @Service()
 export class ContractsService {

@@ -1,5 +1,5 @@
 import { Controller, Route, Get, Post, Body, Response, Tags, Security, Request, Patch, Query } from 'tsoa';
-import Container, { Inject } from 'typedi';
+import Container from 'typedi';
 import { IError } from '../../core/types';
 import { Errors } from '../../utils/errors';
 import { CodeError } from '../../utils/error-with-code';

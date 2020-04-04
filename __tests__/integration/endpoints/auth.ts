@@ -3,7 +3,7 @@ import { api } from '../../test-utils/api-path-generator';
 import { Errors } from '../../../src/utils/errors';
 import { User } from '../../../src/models/user';
 import { testLoader } from '../../test-utils/loaders';
-import { reloadDatabase } from '../../test-utils/database';
+import { reloadDatabase, closeConnection } from '../../test-utils/database';
 import Container from 'typedi';
 import { AuthService } from '../../../src/services/auth';
 
@@ -24,7 +24,12 @@ describe('auth endpoint test', () => {
     const app = await testLoader();
     request = supertest(app);
     done();
-  }, 10000);
+  }, 20000);
+
+  afterAll(async (done) => {
+    await closeConnection();
+    done();
+  });
 
   describe('login', () => {
     it('without any params', async () => {

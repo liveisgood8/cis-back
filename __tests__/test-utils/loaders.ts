@@ -1,4 +1,6 @@
+import './module-def';
 import express from 'express';
+import uniqueFilename = require('unique-filename');
 import expressLoader from '../../src/loaders/express-loader';
 import passportLoader from '../../src/loaders/passport-loader';
 import diLoader from '../../src/loaders/di-loader';
@@ -14,7 +16,7 @@ export async function testLoader(): Promise<express.Express> {
   // Test type orm instance
   const connection = await createConnection({
     type: 'sqlite',
-    database: 'database/test.sqlite',
+    database: uniqueFilename('database/tests') + '.sqlite',
     entities: [
       User,
       Task,

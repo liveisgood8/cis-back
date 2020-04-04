@@ -12,8 +12,8 @@ function getToken(req: Request): string | null {
 }
 
 export function expressAuthentication(request: Request,
-    securityName: string,
-    scopes?: string[],
+  securityName: string,
+  scopes?: string[],
 ): Promise<any> {
   if (securityName.toUpperCase() === 'JWT') {
     const accessToken = getToken(request);
