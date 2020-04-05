@@ -1,4 +1,4 @@
-import { Controller, Route, Get, Post, Body, Response, Tags, Security, Request, Patch, Query } from 'tsoa';
+import { Controller, Route, Get, Post, Body, Response, Tags, Security, Request, Patch } from 'tsoa';
 import Container from 'typedi';
 import { IError } from '../../core/types';
 import { Errors } from '../../utils/errors';
@@ -97,11 +97,12 @@ export class BusinessRequestsController extends Controller {
     }
   }
 
+  @Response<IError>('403', 'Нет прав для регистрации обращения')
   @Response<IError>('500', 'Ошибка добавление нового обращения в базу')
   @Post()
   public async insert(
-    @Request() req: Express.Request,
     @Body() requestBody: IRequestCreateBody,
+    @Request() req: Express.Request,
   ): Promise<BusinessRequest> {
     await this.permissionService.mustHavePermission((req.user as User).id, Permissions.REGISTER_REQUEST);
     try {

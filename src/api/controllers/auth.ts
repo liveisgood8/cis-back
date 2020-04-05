@@ -41,7 +41,6 @@ export class AuthController extends Controller {
     @Body() user: IRegisterRequestBody,
   ): Promise<void> {
     const authService = Container.get(AuthService);
-    this.setStatus(202);
     return await authService.register(user);
   }
 }

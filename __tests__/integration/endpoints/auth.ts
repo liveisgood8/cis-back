@@ -81,7 +81,7 @@ describe('auth endpoint test', () => {
           login: testUser.login,
           password: testUser.password,
         })
-        .expect(202)
+        .expect(200)
         .expect('Content-Type', /json/);
       expect(res.body).toHaveProperty('user');
       expect(res.body).toHaveProperty('accessToken');
@@ -130,7 +130,7 @@ describe('auth endpoint test', () => {
       await reloadDatabase();
       request.post(api('/auth/register'))
         .send(testUser)
-        .expect(202);
+        .expect(200);
     });
   });
 });

@@ -8,7 +8,7 @@ import { AuthService } from '../../../src/services/auth';
 import { BusinessRequestsService } from '../../../src/services/requests';
 import { BusinessRequest } from '../../../src/models/request';
 import { DeepPartial, getRepository } from 'typeorm';
-import { getTestToken } from '../../test-utils/auth';
+import { getTestToken, addTestSuperUser } from '../../test-utils/auth';
 import { ContractsService } from '../../../src/services/contracts';
 
 describe('business requests endpoint test', () => {
@@ -175,7 +175,7 @@ describe('business requests endpoint test', () => {
   }, 20000);
 
   it('insert', async () => {
-    await Container.get(AuthService).register(user);
+    await addTestSuperUser();
     await Container.get(ContractsService).insert({
       id: 1,
       name: 'test name 1',
