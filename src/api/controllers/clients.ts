@@ -62,7 +62,7 @@ export class ClientsController extends Controller {
       });
     } catch (err) {
       throw new CodeError(Errors.INSERT_ENTITY_ERROR,
-        406,
+        500,
         err.message);
     }
   }

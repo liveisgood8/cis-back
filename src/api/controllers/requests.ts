@@ -7,7 +7,8 @@ import { BusinessRequest } from '../../models/request';
 import { BusinessRequestsService } from '../../services/requests';
 import { Request as ExpressRequest } from 'express';
 import { User } from '../../models/user';
-import { MailService } from '../../services/mail';
+import { PermissionsService } from '../../services/permissions';
+import { Permissions } from '../../models/permissions';
 
 interface IRequestCreateBody {
   /**
@@ -44,12 +45,12 @@ interface IGetPendingNumberResponse {
 @Route('/business-requests')
 export class BusinessRequestsController extends Controller {
   private service: BusinessRequestsService;
-  private mailService: MailService;
+  private permissionService: PermissionsService;
 
   constructor() {
     super();
     this.service = Container.get(BusinessRequestsService);
-    this.mailService = Container.get(MailService);
+    this.permissionService = Container.get(PermissionsService);
   }
 
   @Get('/pending-number')
@@ -98,7 +99,11 @@ export class BusinessRequestsController extends Controller {
 
   @Response<IError>('500', 'Ошибка добавление нового обращения в базу')
   @Post()
-  public async insert(@Body() requestBody: IRequestCreateBody): Promise<BusinessRequest> {
+  public async insert(
+    @Request() req: Express.Request,
+    @Body() requestBody: IRequestCreateBody,
+  ): Promise<BusinessRequest> {
+    await this.permissionService.mustHavePermission((req.user as User).id, Permissions.REGISTER_REQUEST);
     try {
       return await this.service.save({
         contract: {

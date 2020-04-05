@@ -26,7 +26,6 @@ export class AuthController extends Controller {
     @Body() requestBody: ILoginRequestBody,
   ): Promise<ILoginResult> {
     const authService = Container.get(AuthService);
-    this.setStatus(202);
     return await authService.login(requestBody.login, requestBody.password);
   }
 
