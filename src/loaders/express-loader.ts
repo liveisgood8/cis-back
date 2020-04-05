@@ -12,6 +12,14 @@ import { RegisterRoutes } from '../api/routes';
 import { CodeError } from '../utils/error-with-code';
 import { Errors } from '../utils/errors';
 import { IError } from '../core/types';
+import { existsSync, mkdirSync } from 'fs';
+
+function createUploadFolderIfNotExist(): void {
+  const uploadsPath = join(config.staticPath, 'uploads'); 
+  if (!existsSync(uploadsPath)) {
+    mkdirSync(uploadsPath);
+  }
+}
 
 /** Just for testing */
 export let app: express.Express;
@@ -28,6 +36,7 @@ export default (): express.Express => {
       res.redirect('http://localhost:3000');
     });
   }
+  createUploadFolderIfNotExist();
   app.use(express.static(config.staticPath));
 
   app.use(passport.initialize());

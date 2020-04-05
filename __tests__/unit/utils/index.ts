@@ -1,6 +1,6 @@
 import { CodeError } from '../../../src/utils/error-with-code';
 import { Errors } from '../../../src/utils/errors';
-import { makeTransporter } from '../../../src/utils/mail-transport';
+import { makeTransporter } from '../../../src/utils/mail';
 import Mail from 'nodemailer/lib/mailer';
 import multerUploader from '../../../src/utils/multer-uploader';
 
