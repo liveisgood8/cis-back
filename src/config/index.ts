@@ -1,5 +1,5 @@
 import { config as devConfig } from './dev';
-import { config as prodConfig } from './dev';
+import { config as prodConfig } from './prod';
 import { IConfig } from './types';
 
 let config: IConfig;

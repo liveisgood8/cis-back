@@ -5,6 +5,15 @@ import { CodeError } from '../../../src/utils/error-with-code';
 import { Errors } from '../../../src/utils/errors';
 
 describe('auth service - unit', () => {
+  const user: Partial<User> = {
+    id: 1,
+    login: 'user1',
+    name: 'alex',
+    surname: 'barkov',
+    password: 'real_password',
+    imageUrl: 'image_url1',
+  };
+
   describe('login', () => {
     it('when user not founded', async () => {
       const queryBuilderMock = jest.fn(() => ({
@@ -25,17 +34,6 @@ describe('auth service - unit', () => {
     });
 
     it('when wrong password', async () => {
-      const user: User = {
-        id: 1,
-        login: 'user1',
-        creationDate: new Date(),
-        name: 'alex',
-        surname: 'barkov',
-        password: 'real_password',
-        imageUrl: 'image_url1',
-        permissions: [],
-        requests: [],
-      };
       const queryBuilderMock = jest.fn(() => ({
         select: jest.fn().mockReturnThis(),
         where: jest.fn().mockReturnThis(),
@@ -54,31 +52,27 @@ describe('auth service - unit', () => {
     });
 
     it('correct', async () => {
-      const user: Partial<User> = {
-        id: 1,
-        login: 'user1',
-        name: 'alex',
-        surname: 'barkov',
-        password: getPasswordHashWithSalt('real_password'),
-        imageUrl: 'image_url1',
+      const correctUser: Partial<User> = {
+        ...user,
+        password: getPasswordHashWithSalt(user.password),
       };
       const queryBuilderMock = jest.fn(() => ({
         select: jest.fn().mockReturnThis(),
         where: jest.fn().mockReturnThis(),
-        getOne: jest.fn().mockReturnValue(user),
+        getOne: jest.fn().mockReturnValue(correctUser),
       }));
       const mockedRepo: Partial<Repository<User>> = {
         createQueryBuilder: queryBuilderMock as any,
       };
       const service = new AuthService(mockedRepo as Repository<User>);
       const loginResult = await service.login('l', 'real_password');
-      expect(queryBuilderMock.call.length).toBe(1);
+      expect(queryBuilderMock).toHaveBeenCalledTimes(1);
       expect(loginResult.user).toStrictEqual({
-        id: 1,
-        login: 'user1', // TODO May be remove login from user on login
-        name: 'alex',
-        surname: 'barkov',
-        imageUrl: 'image_url1',
+        id: correctUser.id,
+        login: correctUser.login,
+        name: correctUser.name,
+        surname: correctUser.surname,
+        imageUrl: correctUser.imageUrl,
       });
       expect(typeof loginResult.accessToken).toBe('string');
       expect(typeof loginResult.refreshToken).toBe('string');
@@ -104,16 +98,10 @@ describe('auth service - unit', () => {
       });
       const service = new AuthService(mockedRepo as Repository<User>);
       try {
-        await service.register({
-          login: 'l',
-          password: 'p',
-          name: 'n',
-          surname: 'sn',
-          imageUrl: 'img',
-        });
+        await service.register(user as User);
         fail('it should not be reached');
       } catch (err) {
-        expect(findOne.mock.calls.length).toBe(1);
+        expect(findOne).toHaveBeenCalledTimes(1);
         expect(err).toStrictEqual(new CodeError(Errors.REGISTER_USER_IS_EXIST, 406));
       }
     });
@@ -122,20 +110,17 @@ describe('auth service - unit', () => {
       findOne.mockReturnValueOnce(undefined);
       const service = new AuthService(mockedRepo as Repository<User>);
       await service.register({
-        login: 'l',
-        password: 'p',
-        name: 'n',
-        surname: 'sn',
-        imageUrl: 'img',
-      });
-      expect(findOne.mock.calls.length).toBe(1);
-      expect(insert.mock.calls.length).toBe(1);
-      expect(insert.mock.calls[0][0]).toStrictEqual({
-        login: 'l',
-        password: getPasswordHashWithSalt('p'),
-        name: 'n',
-        surname: 'sn',
-        imageUrl: 'img',
+        ...user,
+        id: undefined,
+      } as User);
+      expect(findOne).toHaveBeenCalledTimes(1);
+      expect(insert).toHaveBeenCalledTimes(1);
+      expect(insert).toHaveBeenCalledWith({
+        login: user.login,
+        password: getPasswordHashWithSalt(user.password),
+        name: user.name,
+        surname: user.surname,
+        imageUrl: user.imageUrl,
       });
     });
   });

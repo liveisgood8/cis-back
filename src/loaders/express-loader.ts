@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import passport from 'passport';
 import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
-import { ValidateError, FieldErrors } from 'tsoa';
+import { ValidateError } from 'tsoa';
 import { join } from 'path';
 import swaggerConfig from '../../swagger.json';
 import tsoaConfig from '../../tsoa.json';

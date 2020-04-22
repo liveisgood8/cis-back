@@ -4,10 +4,8 @@
   "description": "System for business, helps to control relations with customers and customer workflow",
   "main": "dist/src/app.js",
   "scripts": {
-    "start": "tsc && node dist/src/app.js",
-    "start:tsoa": "npx tsoa routes && tsc && node dist/src/app.js",
-    "make-swagger": "npx tsoa swagger",
-    "start:prod": "set NODE_ENV=production&&tsc&&node dist/src/app.js",
+    "start": "npx tsoa routes && tsc && node dist/src/app.js",
+    "build": "npx tsoa routes && npx tsoa swagger && tsc",
     "test": "jest"
   },
   "repository": {
@@ -37,13 +35,13 @@
     "nodemailer": "^6.4.6",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
+    "pg": "^8.0.2",
     "reflect-metadata": "^0.1.13",
     "sqlite3": "^4.1.1",
     "swagger-ui-express": "^4.1.3",
     "tsoa": "^2.5.13",
     "typedi": "^0.8.0",
-    "typeorm": "^0.2.22",
-    "typescript": "^3.7.5"
+    "typeorm": "^0.2.22"
   },
   "devDependencies": {
     "@types/body-parser": "^1.17.1",
@@ -66,6 +64,7 @@
     "mock-fs": "^4.11.0",
     "supertest": "^4.0.2",
     "ts-jest": "^25.2.1",
-    "unique-filename": "^1.1.1"
+    "unique-filename": "^1.1.1",
+    "typescript": "^3.7.5"
   }
 }

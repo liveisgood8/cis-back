@@ -1,0 +1,20 @@
+version: '3.1'
+services:
+  web:
+    image: cis-back
+    ports: 
+      - 8080:8080
+    depends_on:
+      - db
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: "qcrm-db-user"
+      POSTGRES_PASSWORD: "db-password"
+      POSTGRES_DB: "qcrm"
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 9000:8080
