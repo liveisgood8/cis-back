@@ -7,6 +7,8 @@ module.exports = {
     },
   },
   modulePathIgnorePatterns: ['test-utils'],
+  testPathIgnorePatterns: ['/deps/'],
+  testTimeout: 10000,
   collectCoverageFrom: [
     'src/**/*.ts',
     '!src/app.ts',
