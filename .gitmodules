@@ -1,0 +1,3 @@
+[submodule "cis-front"]
+	path = deps/cis-front
+	url = https://github.com/liveisgood8/cis-front.git
