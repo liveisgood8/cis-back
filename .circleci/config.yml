@@ -28,9 +28,10 @@ jobs:
       cache-version:
         default: v2
         type: string
-    working_directory: deps/cis-front
+    working_directory: ~/repo/deps/cis-front
     steps:
-      - checkout
+      - checkout:
+          path: ~/repo
       - run: 
           command: cd ../../ && npm install && npm start
           background: true
