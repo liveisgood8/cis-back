@@ -52,7 +52,7 @@ jobs:
           command: |
             npm install
             npx tsc
-            npx typeorm schema:sync
+            npx typeorm schema:sync -c dev-connection
             npx typeorm migration:run -c dev-connection
             npm start
           background: true
