@@ -28,32 +28,45 @@ jobs:
       cache-version:
         default: v2
         type: string
-    working_directory: ~/repo/deps/cis-front
     steps:
-      - checkout:
-          path: ~/repo
+      - checkout
       - run:
-          name: "Pull Submodules"
+          name: "Pull submodules"
           command: |
-            cd ../../
             git submodule init
             git submodule update --remote
-      - run: 
-          command: cd ../../ && npm install && npm start
-          background: true
       - restore_cache:
-          key: front-dependency-cache-{{ checksum "package-lock.json" }}
-      - run: npm install
+          key: full-dependency-cache-{{ checksum "package-lock.json" }}-{{ checksum "./deps/cis-front/package-lock.json" }}
+      - run: 
+          name: "Build and start server"
+          command: |
+            npm install
+            npm start
+          background: true
+      - run: 
+          name: "Install packages of cis-front"
+          command: |
+            cd ./deps/cis-front
+            npm install
       - save_cache:
-          key: front-dependency-cache-{{ checksum "package-lock.json" }}
+          key: full-dependency-cache-{{ checksum "package-lock.json" }}-{{ checksum "./deps/cis-front/package-lock.json" }}
           paths:
             - ./node_modules
+            - ./deps/cis-front/node_modules
       - run:
+          name: "Waiting when server start listening"
           shell: /bin/sh
           command: |
             wget --retry-connrefused --waitretry=1 --read-timeout=40 --timeout=30 -t 10 http://localhost:8080/api/v1
             :
-      - run: npm test
+      - run:
+          name: "Start testing of front-end"
+          environment:
+            SKIP_PREFLIGHT_CHECK: true # Skip checking deps for CRA
+          command: \
+            cd ./deps/cis-front
+            npm test
+
 workflows:
     build-and-test:
       jobs:
