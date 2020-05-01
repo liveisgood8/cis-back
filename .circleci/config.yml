@@ -63,7 +63,7 @@ jobs:
           name: "Start testing of front-end"
           environment:
             SKIP_PREFLIGHT_CHECK: true # Skip checking deps for CRA
-          command: \
+          command: |
             cd ./deps/cis-front
             npm test
 
