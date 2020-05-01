@@ -89,7 +89,7 @@ jobs:
             SKIP_PREFLIGHT_CHECK: "true" # Skip checking deps for CRA
           command: |
             cd ./deps/cis-front
-            npm test -- --maxWorkers=1 --forceExit
+            npm test -- --maxWorkers=2 --forceExit
 
 workflows:
     build-and-test:
