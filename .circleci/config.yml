@@ -28,16 +28,12 @@ jobs:
       cache-version:
         default: v2
         type: string
+    working_directory: deps/cis-front
     steps:
       - checkout
-      - restore_cache:
-          key: back-dependency-cache-{{ checksum "package-lock.json" }}
-      - run: npm install
-      - run:
-          name: test
-          command: npm start
+      - run: 
+          command: cd ../../ && npm install && npm start
           background: true
-      - run: cd deps/cis-front
       - restore_cache:
           key: front-dependency-cache-{{ checksum "package-lock.json" }}
       - run: npm install
@@ -45,6 +41,11 @@ jobs:
           key: front-dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
+      - run:
+          shell: /bin/sh
+          command: |
+            wget --retry-connrefused --waitretry=1 --read-timeout=40 --timeout=30 -t 10 http://localhost:8080/api/v1
+            :
       - run: npm test
 workflows:
     build-and-test:
