@@ -2,24 +2,24 @@ version: 2.1
 orbs:
   node: circleci/node@2.0.3
 jobs:
-  build-and-test-back:
-    executor:
-      name: node/default
-      tag: '13.9'
-    parameters:
-      cache-version:
-        default: v2
-        type: string
-    steps:
-      - checkout
-      - restore_back_cache:
-          key: back-dependency-cache-{{ checksum "package-lock.json" }}
-      - run: npm install
-      - save_back_cache:
-          key: back-dependency-cache-{{ checksum "package-lock.json" }}
-          paths:
-            - ./node_modules
-      - run: npm test
+  # build-and-test-back:
+  #   executor:
+  #     name: node/default
+  #     tag: '13.9'
+  #   parameters:
+  #     cache-version:
+  #       default: v2
+  #       type: string
+  #   steps:
+  #     - checkout
+  #     - restore_back_cache:
+  #         key: back-dependency-cache-{{ checksum "package-lock.json" }}
+  #     - run: npm install
+  #     - save_back_cache:
+  #         key: back-dependency-cache-{{ checksum "package-lock.json" }}
+  #         paths:
+  #           - ./node_modules
+  #     - run: npm test
   build-and-test-front:
     executor:
       name: node/default
@@ -32,6 +32,7 @@ jobs:
       - checkout
       - restore_back_cache:
           key: back-dependency-cache-{{ checksum "package-lock.json" }}
+      - run: npm install
       - run: 
           command: npm start
           background: true
