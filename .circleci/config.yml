@@ -48,7 +48,7 @@ jobs:
       - restore_cache:
           key: full-dependency-cache-{{ checksum "package-lock.json" }}-{{ checksum "./deps/cis-front/package-lock.json" }}
       - run: 
-          name: "Build and start server"
+          name: "Build and start back-end server"
           command: |
             npm install
             npm start
@@ -64,10 +64,24 @@ jobs:
             - ./node_modules
             - ./deps/cis-front/node_modules
       - run:
-          name: "Waiting when server start listening"
+          name: "Start front-end dev server"
+          environment:
+            SKIP_PREFLIGHT_CHECK: "true" # Skip checking deps for CRA
+          command: |
+            cd ./deps/cis-front
+            npm start
+          background: true
+      - run:
+          name: "Waiting when back-end server start listening"
           shell: /bin/sh
           command: |
-            wget --retry-connrefused --waitretry=1 --read-timeout=40 --timeout=30 -t 10 http://localhost:8080/api/v1
+            wget --retry-connrefused --waitretry=1 --read-timeout=40 --timeout=30 -t 20 http://localhost:8080/api/v1
+            :
+      - run:
+          name: "Waiting when front-end dev server start listening"
+          shell: /bin/sh
+          command: |
+            wget --retry-connrefused --waitretry=1 --read-timeout=40 --timeout=30 -t 20 http://localhost:3000
             :
       - run:
           name: "Start testing of front-end"
