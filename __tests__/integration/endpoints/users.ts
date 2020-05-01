@@ -7,6 +7,7 @@ import Container from 'typedi';
 import { AuthService } from '../../../src/services/auth';
 import { getTestToken } from '../../test-utils/auth';
 import { getRepository } from 'typeorm';
+import { connectionName } from '../../../src/loaders/typeorm-loader';
 
 describe('business requests endpoint test', () => {
   let request: supertest.SuperTest<supertest.Test>;
@@ -69,7 +70,7 @@ describe('business requests endpoint test', () => {
       })
       .expect(204);
 
-    const updatedUser = await getRepository(User).findOne({
+    const updatedUser = await getRepository(User, connectionName).findOne({
       select: ['name', 'surname', 'imageUrl'],
       where: {
         id: 1,

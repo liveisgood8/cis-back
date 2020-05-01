@@ -1,0 +1,28 @@
+[{
+  "name": "dev-connection",
+  "type": "sqlite",
+  "database": "database/db.sqlite",
+  "entities": ["dist/src/models/**/*.js"],
+  "synchronize": true,
+  "logging": true,
+  "migrationsTableName": "migration_table",
+  "migrations": ["dist/migration/*.js"],
+  "cli": {
+    "migrationsDir": "migration"
+  }
+}, {
+  "name": "prod-connection",
+  "type": "postgres",
+  "host": "db",
+  "port": 5432,
+  "username": "qcrm-db-user",
+  "password": "db-password",
+  "database": "qcrm",
+  "synchronize": true,
+  "entities": ["dist/src/models/**/*.js"],
+  "migrationsTableName": "migration_table",
+  "migrations": ["dist/migration/*.js"],
+  "cli": {
+    "migrationsDir": "migration"
+  }
+}]

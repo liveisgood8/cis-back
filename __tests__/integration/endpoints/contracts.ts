@@ -6,10 +6,11 @@ import { Contract } from '../../../src/models/contract';
 import Container from 'typedi';
 import { ContractsService } from '../../../src/services/contracts';
 import { getTestToken, addTestSuperUser } from '../../test-utils/auth';
-import { DeepPartial, getRepository, getConnection } from 'typeorm';
+import { DeepPartial, getRepository } from 'typeorm';
 import { Client } from '../../../src/models/client';
 import { ClientsService } from '../../../src/services/clients';
 import { join } from 'path';
+import { connectionName } from '../../../src/loaders/typeorm-loader';
 
 describe('contracts endpoint test', () => {
   const realContracts: DeepPartial<Contract>[] = [
@@ -170,7 +171,7 @@ describe('contracts endpoint test', () => {
     const contractId: number = res.body;
     expect(contractId).toBe(realContracts[0].id);
 
-    const contract = await getRepository(Contract).findOne({
+    const contract = await getRepository(Contract, connectionName).findOne({
       where: {
         id: 1,
       },

@@ -51,6 +51,9 @@ jobs:
           name: "Build and start back-end server"
           command: |
             npm install
+            npx tsc
+            npx typeorm schema:sync
+            npx typeorm migration:run -c dev-connection
             npm start
           background: true
       - run: 

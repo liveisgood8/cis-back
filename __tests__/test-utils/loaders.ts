@@ -11,10 +11,12 @@ import { Client } from '../../src/models/client';
 import { Contract } from '../../src/models/contract';
 import { UserPermissions } from '../../src/models/permissions';
 import { BusinessRequest } from '../../src/models/request';
+import { connectionName } from '../../src/loaders/typeorm-loader';
 
 export async function testLoader(): Promise<express.Express> {
   // Test type orm instance
   const connection = await createConnection({
+    name: connectionName,
     type: 'sqlite',
     database: uniqueFilename('database/tests') + '.sqlite',
     entities: [

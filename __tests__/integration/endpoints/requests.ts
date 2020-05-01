@@ -10,6 +10,7 @@ import { BusinessRequest } from '../../../src/models/request';
 import { DeepPartial, getRepository } from 'typeorm';
 import { getTestToken, addTestSuperUser } from '../../test-utils/auth';
 import { ContractsService } from '../../../src/services/contracts';
+import { connectionName } from '../../../src/loaders/typeorm-loader';
 
 describe('business requests endpoint test', () => {
   let request: supertest.SuperTest<supertest.Test>;
@@ -164,7 +165,7 @@ describe('business requests endpoint test', () => {
       })
       .expect(204);
 
-    const modifiedRequest = await getRepository(BusinessRequest)
+    const modifiedRequest = await getRepository(BusinessRequest, connectionName)
       .findOne({
         where: {
           id: 1,

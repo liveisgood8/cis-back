@@ -3,6 +3,7 @@ import { Repository, getConnection, DeepPartial } from 'typeorm';
 import { BusinessRequest } from '../models/request';
 import { User } from '../models/user';
 import { MailService, IMessageOptions } from './mail';
+import { connectionName } from '../loaders/typeorm-loader';
 
 interface IAnswer {
   email: string;
@@ -52,7 +53,7 @@ export class BusinessRequestsService {
   }
 
   public async handle(requestId: number, answer: IAnswer): Promise<void> {
-    await getConnection().transaction(async (transactionEntityManage) => {
+    await getConnection(connectionName).transaction(async (transactionEntityManage) => {
       const request = transactionEntityManage.create(BusinessRequest, {
         id: requestId,
         isHandled: true,

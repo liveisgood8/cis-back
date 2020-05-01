@@ -15,16 +15,17 @@ import { BusinessRequestsService } from '../services/requests';
 import { BusinessRequest } from '../models/request';
 import { MailService } from '../services/mail';
 import { makeTransporter } from '../utils/mail';
+import { connectionName } from './typeorm-loader';
 
 export default (): void => {
-  Container.set(AuthService, new AuthService(getRepository(User)));
-  Container.set(UsersService, new UsersService(getRepository(User)));
-  Container.set(ClientsService, new ClientsService(getRepository(Client)));
-  Container.set(ContractsService, new ContractsService(getRepository(Contract)));
-  Container.set(TasksService, new TasksService(getRepository(Task)));
-  Container.set(PermissionsService, new PermissionsService(getRepository(UserPermissions)));
+  Container.set(AuthService, new AuthService(getRepository(User, connectionName)));
+  Container.set(UsersService, new UsersService(getRepository(User, connectionName)));
+  Container.set(ClientsService, new ClientsService(getRepository(Client, connectionName)));
+  Container.set(ContractsService, new ContractsService(getRepository(Contract, connectionName)));
+  Container.set(TasksService, new TasksService(getRepository(Task, connectionName)));
+  Container.set(PermissionsService, new PermissionsService(getRepository(UserPermissions, connectionName)));
   Container.set(MailService, new MailService(makeTransporter()));
   Container.set(BusinessRequestsService, new BusinessRequestsService(
-    getRepository(BusinessRequest),
+    getRepository(BusinessRequest, connectionName),
     Container.get(MailService)));
 };
