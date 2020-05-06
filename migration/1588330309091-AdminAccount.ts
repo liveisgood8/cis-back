@@ -14,10 +14,10 @@ export class AdminAccount1588329234411 implements MigrationInterface {
     if (adminUserId.length && adminUserId[0].id > 0) {
       const id = adminUserId[0].id;
       await queryRunner.query(`DELETE FROM "user_permissions" WHERE "userId"=${id}`);
-      await queryRunner.query(`INSERT INTO "user_permissions"("userId", "permissionId") VALUES (${id}, 0)`);
       await queryRunner.query(`INSERT INTO "user_permissions"("userId", "permissionId") VALUES (${id}, 1)`);
       await queryRunner.query(`INSERT INTO "user_permissions"("userId", "permissionId") VALUES (${id}, 2)`);
       await queryRunner.query(`INSERT INTO "user_permissions"("userId", "permissionId") VALUES (${id}, 3)`);
+      await queryRunner.query(`INSERT INTO "user_permissions"("userId", "permissionId") VALUES (${id}, 4)`);
     } else {
       console.error(adminUserId);
       throw new Error('AdminUserId is not selected');

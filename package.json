@@ -6,6 +6,7 @@
   "scripts": {
     "start": "npx tsoa routes && tsc && node dist/src/app.js",
     "build": "npx tsoa routes && npx tsoa swagger && tsc",
+    "migration": "npx typeorm migration:run",
     "test": "jest"
   },
   "repository": {
@@ -64,7 +65,7 @@
     "mock-fs": "^4.11.0",
     "supertest": "^4.0.2",
     "ts-jest": "^25.2.1",
-    "unique-filename": "^1.1.1",
-    "typescript": "^3.7.5"
+    "typescript": "^3.7.5",
+    "unique-filename": "^1.1.1"
   }
 }

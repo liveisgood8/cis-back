@@ -1,12 +1,13 @@
-version: '3.1'
+version: '3.3'
 services:
   web:
-    image: qcrm:latest
+    build: .
     command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; node dist/src/app.js'
     environment:
-      - WAIT_HOSTS_TIMEOUT=300
-      - WAIT_SLEEP_INTERVAL=30
-      - WAIT_HOST_CONNECT_TIMEOUT=30
+      WAIT_HOSTS_TIMEOUT: 300
+      WAIT_SLEEP_INTERVAL: 30
+      WAIT_HOST_CONNECT_TIMEOUT: 30
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
     ports: 
       - 8080:8080
     depends_on:
