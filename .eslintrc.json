@@ -48,7 +48,8 @@
             {
                 "FunctionExpression": {
                     "parameters": 1
-                }
+                },
+                "SwitchCase": 1
             }
             
         ],

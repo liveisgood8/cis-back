@@ -16,6 +16,7 @@ import { BusinessRequest } from '../models/request';
 import { MailService } from '../services/mail';
 import { makeTransporter } from '../utils/mail';
 import { connectionName } from './typeorm-loader';
+import { SearchService } from '../services/search';
 
 export default (): void => {
   Container.set(AuthService, new AuthService(getRepository(User, connectionName)));
@@ -28,4 +29,10 @@ export default (): void => {
   Container.set(BusinessRequestsService, new BusinessRequestsService(
     getRepository(BusinessRequest, connectionName),
     Container.get(MailService)));
+  Container.set(SearchService, new SearchService(
+    getRepository(Client, connectionName),
+    getRepository(Contract, connectionName),
+    getRepository(Task, connectionName),
+    getRepository(BusinessRequest, connectionName),
+  ));
 };

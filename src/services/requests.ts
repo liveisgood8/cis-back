@@ -1,7 +1,6 @@
 import { Service } from 'typedi';
 import { Repository, getConnection, DeepPartial } from 'typeorm';
 import { BusinessRequest } from '../models/request';
-import { User } from '../models/user';
 import { MailService, IMessageOptions } from './mail';
 import { connectionName } from '../loaders/typeorm-loader';
 

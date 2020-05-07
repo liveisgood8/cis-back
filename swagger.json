@@ -1016,6 +1016,12 @@
 							"$ref": "#/definitions/BusinessRequest"
 						}
 					},
+					"403": {
+						"description": "Нет прав для регистрации обращения",
+						"schema": {
+							"$ref": "#/definitions/IError"
+						}
+					},
 					"500": {
 						"description": "Ошибка добавление нового обращения в базу",
 						"schema": {
