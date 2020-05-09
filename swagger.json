@@ -552,7 +552,7 @@
 		}
 	},
 	"info": {
-		"title": "customerinteractionsystem",
+		"title": "qcrm",
 		"version": "1.0.0",
 		"description": "System for business, helps to control relations with customers and customer workflow",
 		"license": {
@@ -1088,6 +1088,56 @@
 				]
 			}
 		},
+		"/search": {
+			"get": {
+				"operationId": "Search",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"type": "object"
+						}
+					},
+					"500": {
+						"description": "Ошибка получения прав из базы",
+						"schema": {
+							"$ref": "#/definitions/IError"
+						}
+					}
+				},
+				"tags": [
+					"Search"
+				],
+				"security": [
+					{
+						"JWT": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "scope",
+						"required": true,
+						"type": "string",
+						"enum": [
+							"clients",
+							"contracts",
+							"tasks",
+							"requests"
+						]
+					},
+					{
+						"in": "query",
+						"name": "query",
+						"required": true,
+						"type": "string"
+					}
+				]
+			}
+		},
 		"/tasks": {
 			"get": {
 				"operationId": "GetAll",
@@ -1355,6 +1405,10 @@
 		{
 			"name": "Permissions",
 			"description": "Operations about user permissions"
+		},
+		{
+			"name": "Search",
+			"description": "Operations about search entities"
 		}
 	],
 	"schemes": [

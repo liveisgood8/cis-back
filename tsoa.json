@@ -54,6 +54,10 @@
       {
         "name": "Permissions",
         "description": "Operations about user permissions"
+      },
+      {
+        "name": "Search",
+        "description": "Operations about search entities"
       }
     ]
   },

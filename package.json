@@ -6,6 +6,7 @@
   "scripts": {
     "start": "npx tsoa routes && tsc && node dist/src/app.js",
     "build": "npx tsoa routes && npx tsoa swagger && tsc",
+    "swagger": "npx tsoa swagger",
     "migration": "npx typeorm migration:run",
     "test": "jest"
   },
