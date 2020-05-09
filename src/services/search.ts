@@ -46,6 +46,7 @@ export class SearchService {
 
   private async searchContracts(query: string): Promise<Contract[]> {
     return this.contractsRepository.find({
+      relations: ['client'],
       where: [{
         name: Like(`%${query}%`),
       }, {
@@ -56,6 +57,7 @@ export class SearchService {
 
   private async searchTasks(query: string): Promise<Task[]> {
     return this.tasksRepository.find({
+      relations: ['contract', 'contract.client'],
       where: [{
         name: Like(`%${query}%`),
       }, {
@@ -66,6 +68,7 @@ export class SearchService {
 
   private async searchRequests(query: string): Promise<BusinessRequest[]> {
     return this.requestsRepository.find({
+      relations: ['contract', 'contract.client'],
       where: [{
         title: Like(`%${query}%`),
       }, {
