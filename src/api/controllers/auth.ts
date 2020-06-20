@@ -29,11 +29,6 @@ export class AuthController extends Controller {
     return await authService.login(requestBody.login, requestBody.password);
   }
 
-  // TODO
-  // @Post('/logout')
-  // public async logout(): Promise<void> {
-  // }
-
   @Response<IError>('406', 'Пользователь уже существует')
   @Response<IError>('500', 'Ошибка сервера')
   @Post('/register')

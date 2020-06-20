@@ -20,19 +20,13 @@ export function expressAuthentication(request: Request,
 
     return new Promise((resolve, reject) => {
       if (!accessToken) {
-        reject(new Error('Для доступа к ресурсу необходимо авторизоваться'));
+        reject(new Error('Для доступа к ресурсу необходимо пройти аутентификацию'));
       }
 
       jwt.verify(accessToken, config.jwt.access.secretKey, (err: any, decoded: any) => {
         if (err) {
           reject(err);
         } else {
-          // // Check if JWT contains all required scopes
-          // for (let scope of scopes) {
-          //   if (!decoded.scopes.includes(scope)) {
-          //     reject(new Error('JWT does not contain required scope'));
-          //   }
-          // }
           resolve(decoded.user);
         }
       });
