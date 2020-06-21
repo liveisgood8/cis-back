@@ -2,7 +2,6 @@ import './module-def';
 import express from 'express';
 import uniqueFilename = require('unique-filename');
 import expressLoader from '../../src/loaders/express-loader';
-import passportLoader from '../../src/loaders/passport-loader';
 import diLoader from '../../src/loaders/di-loader';
 import { createConnection } from 'typeorm';
 import { Task } from '../../src/models/task';
@@ -36,7 +35,6 @@ export async function testLoader(): Promise<express.Express> {
 
   await diLoader();
 
-  passportLoader();
   const app = expressLoader();
 
   return app;
