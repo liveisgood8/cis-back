@@ -3,7 +3,6 @@ import { createTransport } from 'nodemailer';
 
 export default (): Mail => {
   /** Make real transport for production */
-  console.log('smtp pass', process.env.SMTP_PASSWORD);
   return createTransport({
     host: 'smtp.yandex.ru',
     port: 465,
