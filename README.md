@@ -27,7 +27,8 @@ Secondly you should configure SMTP server for sending emails in [`src/utils/mail
 After that you can execute following command from repository dir for build and deploy service locally:
 
 ```
-export SMTP_PASSWORD=your_smtp_password
+export SMTP_USER=your_yandex_smtp_user
+export SMTP_PASSWORD=your_yandex_smtp_password
 docker-compose up
 ```
 
