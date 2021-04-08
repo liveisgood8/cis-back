@@ -3,6 +3,7 @@ services:
   web:
     build: .
     environment:
+      SMTP_USER: ${SMTP_USER}
       SMTP_PASSWORD: ${SMTP_PASSWORD}
     ports: 
       - 8080:8080
