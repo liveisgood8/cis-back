@@ -5,8 +5,8 @@ export default (): Transporter => {
     host: 'smtp.mailtrap.io',
     port: 2525,
     auth: {
-      user: '7b6538a5845234',
-      pass: 'd554ba4ed19353',
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASSWORD,
     },
   });
 };
