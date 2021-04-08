@@ -8,7 +8,7 @@ export default (): Mail => {
     port: 465,
     secure: true,
     auth: {
-      user: 'lemeshonok12@yandex.ru',
+      user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASSWORD,
     },
   });
